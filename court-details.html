@@ -62,7 +62,7 @@ function getCookie(name) {
 
 </script>
 </head><body class="min-h-screen flex flex-col">
-<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center gap-md"><a href="javascript:history.back()" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface"><span class="material-symbols-outlined">arrow_back</span></a><div class="flex items-center gap-sm flex-1"><img alt="HoopFinder Logo" class="h-6 w-auto object-contain" src="screen.png"><span class="font-headline-md text-headline-md text-on-surface uppercase truncate">Court Details</span></div><a href="profile.html"><img id="header-user-photo" alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline/20 bg-surface-container-highest" src="screen.png"></a></div></header>
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center gap-md"><a href="javascript:history.back()" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface"><span class="material-symbols-outlined">arrow_back</span></a><div class="flex items-center gap-sm flex-1"><img alt="HoopFinder Logo" class="h-6 w-auto object-contain" src="logosvg.svg"><span class="font-headline-md text-headline-md text-on-surface uppercase truncate">Court Details</span></div><a href="profile.html"><img id="header-user-photo" alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline/20 bg-surface-container-highest" src="logosvg.svg"></a></div></header>
 <main class="flex-grow w-full pt-16 bg-background">
     <div id="court-content" class="flex flex-col w-full pb-safe">
         <div class="text-center p-xl mt-xl flex flex-col items-center">
@@ -173,7 +173,7 @@ auth.onAuthStateChanged((user) => {
                 interactive: false
             });
             detailMap.on('load', () => {
-                detailMap.loadImage('screen.png', (error, image) => {
+                detailMap.loadImage('logosvg.svg', (error, image) => {
                     if (error) throw error;
                     detailMap.addImage('court-pin', image);
                     detailMap.addSource('court', {

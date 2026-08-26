@@ -61,7 +61,7 @@ function getCookie(name) {
 }
 
 </script>
-</head><body class="min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center justify-between gap-md"><div class="flex items-center gap-sm"><img alt="HoopFinder Logo" class="h-8 w-auto object-contain" src="screen.png"><span class="font-headline-md text-headline-md text-primary uppercase truncate">Home Map</span></div><a href="profile.html"><img id="header-user-photo" alt="Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-outline/20 bg-surface-container-highest" src="screen.png"></a></div></header>
+</head><body class="min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center justify-between gap-md"><div class="flex items-center gap-sm"><img alt="HoopFinder Logo" class="h-8 w-auto object-contain" src="logosvg.svg"><span class="font-headline-md text-headline-md text-primary uppercase truncate">Home Map</span></div><a href="profile.html"><img id="header-user-photo" alt="Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-outline/20 bg-surface-container-highest" src="logosvg.svg"></a></div></header>
 <main class="flex-grow w-full relative">
     <div id="map"></div>
     
@@ -92,7 +92,7 @@ function getCookie(name) {
     <!-- Login Auth Overlay -->
     <div id="login-overlay" class="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center">
         <div class="w-full max-w-sm flex flex-col items-center gap-6 bg-surface-container p-8 rounded-2xl shadow-2xl border border-outline-variant/30">
-            <img src="screen.png" alt="HoopFinder" class="h-16 w-auto object-contain mb-2">
+            <img src="logosvg.svg" alt="HoopFinder" class="h-16 w-auto object-contain mb-2">
             <div>
                 <h1 class="font-display-lg text-headline-lg text-primary uppercase tracking-wider">HOOPFINDER</h1>
                 <p class="font-body-md text-on-surface-variant text-sm mt-1">Authenticate to access proprietary court discovery and player networks.</p>
@@ -171,7 +171,7 @@ function getCookie(name) {
     });
 
     map.on('load', () => {
-        map.loadImage('screen.png', (error, image) => {
+        map.loadImage('logosvg.svg', (error, image) => {
             if (error) throw error;
             map.addImage('court-pin', image);
         });
