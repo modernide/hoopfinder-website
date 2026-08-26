@@ -1,192 +1,198 @@
-<!DOCTYPE html>
-<html class="dark" lang="en">
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>HoopFinder - Add Court</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
 
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-        name="viewport">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap"
-        rel="stylesheet">
-    <link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };</script>
+<style>
+@layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
+::-webkit-scrollbar { display: none; }
+#map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+</style>
+<script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script
-        id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {"colors": {"on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf"}, "borderRadius": {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"}, "spacing": {"sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px"}, "fontFamily": {"headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"]}, "fontSize": {"headline-lg": ["32px", {"lineHeight": "36px", "fontWeight": "700"}], "label-bold": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}], "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}], "headline-md": ["24px", {"lineHeight": "28px", "fontWeight": "700"}], "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}], "display-lg": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800"}], "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}]}}}};</script>
-    <style>
-        @layer base {
-            body {
-                @apply bg-background text-on-background antialiased;
-            }
+const firebaseConfig = {
+    apiKey: "AIzaSyCBNML0EM1RL0EiUK5S5Fi27JU3niH0rTI",
+    authDomain: "hoopfinder-16cfb.firebaseapp.com",
+    projectId: "hoopfinder-16cfb",
+    storageBucket: "hoopfinder-16cfb.firebasestorage.app",
+    messagingSenderId: "965894675612",
+    appId: "1:965894675612:web:226601b3e3bca26fb52159",
+    measurementId: "G-4BTW498XNP"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const API_BASE_URL = "https://us-central1-hoopfinder-16cfb.cloudfunctions.net/api";
 
-            .pb-safe {
-                padding-bottom: env(safe-area-inset-bottom, 0px);
-            }
+async function fetchWithAuth(url, options = {}) {
+    const user = auth.currentUser;
+    if (!user) throw new Error("User not authenticated");
+    const token = await user.getIdToken();
+    const headers = options.headers || {};
+    headers['Authorization'] = `Bearer ${token}`;
+    if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(options.body);
+    }
+    options.headers = headers;
+    return fetch(url, options);
+}
 
-            .pt-safe {
-                padding-top: env(safe-area-inset-top, 0px);
-            }
-        }
+function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
+    var R = 3958.8;
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+function deg2rad(deg) { return deg * (Math.PI / 180); }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+}
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-    </style>
-    <script>
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCBNML0EM1RL0EiUK5S5Fi27JU3niH0rTI",
-            authDomain: "hoopfinder-16cfb.firebaseapp.com",
-            projectId: "hoopfinder-16cfb",
-            storageBucket: "hoopfinder-16cfb.firebasestorage.app",
-            messagingSenderId: "965894675612",
-            appId: "1:965894675612:web:226601b3e3bca26fb52159",
-            measurementId: "G-4BTW498XNP"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-
-        function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
-            var R = 3958.8;
-            var dLat = deg2rad(lat2 - lat1);
-            var dLon = deg2rad(lon2 - lon1);
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-        function deg2rad(deg) {return deg * (Math.PI / 180);}
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
-            return null;
-        }
-    </script>
-</head>
-
-<body class="min-h-screen flex flex-col">
-    <header
-        class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto">
-        <div class="h-16 px-margin-mobile flex items-center gap-md"><a href="javascript:history.back()"
-                class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface"><span
-                    class="material-symbols-outlined">arrow_back</span></a>
-            <div class="flex items-center gap-sm flex-1"><img alt="HoopSpot Logo" class="h-6 w-auto object-contain"
-                    src="screen.png"><span
-                    class="font-headline-md text-headline-md text-primary uppercase truncate">Report Court</span></div>
-        </div>
-    </header>
-    <main class="flex-grow w-full pt-16 pb-24 bg-background">
-        <div class="flex flex-col w-full gap-md">
-            <section class="px-margin-mobile flex flex-col gap-sm mt-md">
-                <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Add Missing Court</h1>
-                <p class="font-body-md text-body-md text-on-surface-variant">Drop a pin to add a court to our local DB
-                    (API pending).</p>
-            </section>
-            <section class="px-margin-mobile flex flex-col gap-lg">
-                <div class="flex flex-col gap-xs">
-                    <label
-                        class="font-label-bold text-label-bold text-on-surface-variant flex justify-between items-center">
-                        <span>LOCATION</span><span class="text-primary cursor-pointer hover:underline text-xs"
-                            onclick="geolocate()">Use Current</span>
-                    </label>
-                    <div class="relative w-full h-48 rounded-lg overflow-hidden shadow-md">
-                        <div id="add-map" class="absolute inset-0 z-0"></div>
-                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                            <img src="screen.png" class="w-12 h-12 drop-shadow-xl transform -translate-y-1/2">
-                        </div>
+</script>
+</head><body class="min-h-screen flex flex-col">
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center gap-md"><a href="javascript:history.back()" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface"><span class="material-symbols-outlined">arrow_back</span></a><div class="flex items-center gap-sm flex-1"><img alt="HoopFinder Logo" class="h-6 w-auto object-contain" src="screen.png"><span class="font-headline-md text-headline-md text-primary uppercase truncate">Report Court</span></div></div></header>
+<main class="flex-grow w-full pt-16 pb-24 bg-background">
+    <div class="flex flex-col w-full gap-md">
+        <section class="px-margin-mobile flex flex-col gap-sm mt-md">
+            <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Add Missing Court</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Drop a pin to publish a court directly to the HoopFinder database.</p>
+        </section>
+        <form id="add-court-form" onsubmit="submitCourt(event)" class="px-margin-mobile flex flex-col gap-lg">
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-label-bold text-on-surface-variant flex justify-between items-center">
+                    <span>LOCATION</span><span class="text-primary cursor-pointer hover:underline text-xs" onclick="geolocate()">Use Current</span>
+                </label>
+                <div class="relative w-full h-48 rounded-lg overflow-hidden shadow-md">
+                    <div id="add-map" class="absolute inset-0 z-0"></div>
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                        <img src="screen.png" class="w-12 h-12 drop-shadow-xl transform -translate-y-1/2">
                     </div>
-                    <div class="text-xs text-on-surface-variant font-label-sm mt-1">Coordinates: <span
-                            id="coord-display">...</span></div>
                 </div>
+                <div class="text-xs text-on-surface-variant font-label-sm mt-1">Coordinates: <span id="coord-display">...</span></div>
+            </div>
+            
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-label-bold text-on-surface-variant">COURT NAME</label>
+                <input id="court-name" required class="bg-surface-container-low text-on-surface font-body-lg text-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full" placeholder="e.g. Rucker Park">
+            </div>
+            
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-label-bold text-on-surface-variant">SURFACE TYPE</label>
+                <select id="surface-type" class="appearance-none bg-surface-container-low text-on-surface font-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full">
+                    <option value="Asphalt">Asphalt</option>
+                    <option value="Concrete">Concrete</option>
+                    <option value="Hardwood">Hardwood (Indoor)</option>
+                </select>
+            </div>
 
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">COURT NAME</label>
-                    <input
-                        class="bg-surface-container-low text-on-surface font-body-lg text-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full"
-                        placeholder="e.g. Rucker Park">
-                </div>
-
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">SURFACE TYPE</label>
-                    <select
-                        class="appearance-none bg-surface-container-low text-on-surface font-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full">
-                        <option value="asphalt">Asphalt</option>
-                        <option value="concrete">Concrete</option>
-                        <option value="wood">Hardwood (Indoor)</option>
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-label-bold text-on-surface-variant">HOOPS & LIGHTING</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="hoops-count" placeholder="Hoops count (e.g. 2)" value="2" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
+                    <select id="lighting-status" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
+                        <option value="Yes">Lit at Night</option>
+                        <option value="No">No Lights</option>
                     </select>
                 </div>
-            </section>
+            </div>
 
-            <div class="mt-xl px-margin-mobile pb-md">
-                <button onclick="alert('In a full backend, this would POST to OSM or a local database.')"
-                    class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-md rounded-lg shadow-[0_4px_0_rgba(0,0,0,1)] active:translate-y-1 active:shadow-[0_0px_0_rgba(0,0,0,1)] transition-all flex justify-center items-center gap-sm">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">publish</span>
-                    Submit Court
+            <div class="mt-md">
+                <button type="submit" id="submit-btn" class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-md rounded-lg shadow-[0_4px_0_rgba(0,0,0,1)] active:translate-y-1 active:shadow-[0_0px_0_rgba(0,0,0,1)] transition-all flex justify-center items-center gap-sm">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">publish</span> Submit Court
                 </button>
             </div>
-        </div>
-    </main>
+        </form>
+    </div>
+</main>
 
-    <script>
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = "./index.html";
-            } else {
-                console.log("Welcome, " + user.displayName);
-                const userPhoto = document.getElementById('header-user-photo');
-                if (userPhoto && user.photoURL) {
-                    userPhoto.src = user.photoURL;
-                }
-                if (typeof onAuthReady === 'function') {
-                    onAuthReady(user);
-                }
-            }
+<script>
+auth.onAuthStateChanged((user) => {
+    if (!user) {
+        window.location.href = "./index.html"; 
+    } else {
+        console.log("Welcome, " + user.displayName);
+        const userPhoto = document.getElementById('header-user-photo');
+        if (userPhoto && user.photoURL) {
+            userPhoto.src = user.photoURL;
+        }
+        if (typeof onAuthReady === 'function') {
+            onAuthReady(user);
+        }
+    }
+});
+</script>
+
+<script>
+    let map;
+    let currentCoords = [-75.1652, 39.9526];
+
+    function onAuthReady(user) {
+        map = new maplibregl.Map({
+            container: 'add-map',
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            center: currentCoords,
+            zoom: 15
         });
-    </script>
 
-    <script>
-        let map;
-        function onAuthReady(user) {
-            map = new maplibregl.Map({
-                container: 'add-map',
-                style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-                center: [-75.1652, 39.9526],
-                zoom: 15
-            });
-
-            map.on('move', () => {
-                const center = map.getCenter();
-                document.getElementById('coord-display').innerText = `${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}`;
+        map.on('move', () => {
+            const center = map.getCenter();
+            currentCoords = [center.lng, center.lat];
+            document.getElementById('coord-display').innerText = `${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}`;
+        });
+    }
+    
+    function geolocate() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                map.flyTo({center: [pos.coords.longitude, pos.coords.latitude], zoom: 16});
             });
         }
+    }
 
-        function geolocate() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    map.flyTo({center: [pos.coords.longitude, pos.coords.latitude], zoom: 16});
-                });
-            }
+    async function submitCourt(e) {
+        e.preventDefault();
+        const courtName = document.getElementById('court-name').value.trim();
+        const surfaceType = document.getElementById('surface-type').value;
+        const hoops = document.getElementById('hoops-count').value;
+        const lit = document.getElementById('lighting-status').value;
+        
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerText = "Submitting...";
+
+        try {
+            const res = await fetchWithAuth(`${API_BASE_URL}/courts`, {
+                method: 'POST',
+                body: {
+                    courtName,
+                    surfaceType,
+                    coordinates: currentCoords,
+                    hoops,
+                    lit
+                }
+            });
+
+            if(!res.ok) throw new Error(`HTTP Error ${res.status}`);
+            const data = await res.json();
+            alert("Court published to HoopFinder Database successfully!");
+            window.location.href = "index.html";
+        } catch(err) {
+            alert("Error adding court: " + err.message);
+            btn.disabled = false;
+            btn.innerText = "Submit Court";
         }
-    </script>
-</body>
-
-</html>
+    }
+</script>
+</body></html>

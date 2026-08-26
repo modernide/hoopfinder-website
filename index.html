@@ -1,333 +1,284 @@
-<!DOCTYPE html>
-<html class="dark" lang="en">
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>HoopFinder - Home Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
 
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-        name="viewport">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap"
-        rel="stylesheet">
-    <link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };</script>
+<style>
+@layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
+::-webkit-scrollbar { display: none; }
+#map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+</style>
+<script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script
-        id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {"colors": {"on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf"}, "borderRadius": {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"}, "spacing": {"sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px"}, "fontFamily": {"headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"]}, "fontSize": {"headline-lg": ["32px", {"lineHeight": "36px", "fontWeight": "700"}], "label-bold": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}], "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}], "headline-md": ["24px", {"lineHeight": "28px", "fontWeight": "700"}], "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}], "display-lg": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800"}], "label-sm": ["12px", {"lineHeight": "14px", "fontWeight": "500"}]}}}};</script>
-    <style>
-        @layer base {
-            body {
-                @apply bg-background text-on-background antialiased;
-            }
+const firebaseConfig = {
+    apiKey: "AIzaSyCBNML0EM1RL0EiUK5S5Fi27JU3niH0rTI",
+    authDomain: "hoopfinder-16cfb.firebaseapp.com",
+    projectId: "hoopfinder-16cfb",
+    storageBucket: "hoopfinder-16cfb.firebasestorage.app",
+    messagingSenderId: "965894675612",
+    appId: "1:965894675612:web:226601b3e3bca26fb52159",
+    measurementId: "G-4BTW498XNP"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const API_BASE_URL = "https://us-central1-hoopfinder-16cfb.cloudfunctions.net/api";
 
-            .pb-safe {
-                padding-bottom: env(safe-area-inset-bottom, 0px);
-            }
+async function fetchWithAuth(url, options = {}) {
+    const user = auth.currentUser;
+    if (!user) throw new Error("User not authenticated");
+    const token = await user.getIdToken();
+    const headers = options.headers || {};
+    headers['Authorization'] = `Bearer ${token}`;
+    if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(options.body);
+    }
+    options.headers = headers;
+    return fetch(url, options);
+}
 
-            .pt-safe {
-                padding-top: env(safe-area-inset-top, 0px);
-            }
-        }
+function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
+    var R = 3958.8;
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+function deg2rad(deg) { return deg * (Math.PI / 180); }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+}
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-    </style>
-    <script>
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCBNML0EM1RL0EiUK5S5Fi27JU3niH0rTI",
-            authDomain: "hoopfinder-16cfb.firebaseapp.com",
-            projectId: "hoopfinder-16cfb",
-            storageBucket: "hoopfinder-16cfb.firebasestorage.app",
-            messagingSenderId: "965894675612",
-            appId: "1:965894675612:web:226601b3e3bca26fb52159",
-            measurementId: "G-4BTW498XNP"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-
-        function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
-            var R = 3958.8;
-            var dLat = deg2rad(lat2 - lat1);
-            var dLon = deg2rad(lon2 - lon1);
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-        function deg2rad(deg) {return deg * (Math.PI / 180);}
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
-            return null;
-        }
-    </script>
-</head>
-
-<body class="min-h-screen flex flex-col">
-    <header
-        class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto">
-        <div class="h-16 px-margin-mobile flex items-center justify-between gap-md">
-            <div class="flex items-center gap-sm"><img alt="HoopSpot Logo" class="h-8 w-auto object-contain"
-                    src="screen.png"><span
-                    class="font-headline-md text-headline-md text-primary uppercase truncate">Home Map</span></div><a
-                href="profile.html"><img id="header-user-photo" alt="Profile"
-                    class="w-10 h-10 rounded-full object-cover ring-2 ring-outline/20 bg-surface-container-highest"
-                    src="screen.png"></a>
+</script>
+</head><body class="min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto"><div class="h-16 px-margin-mobile flex items-center justify-between gap-md"><div class="flex items-center gap-sm"><img alt="HoopFinder Logo" class="h-8 w-auto object-contain" src="screen.png"><span class="font-headline-md text-headline-md text-primary uppercase truncate">Home Map</span></div><a href="profile.html"><img id="header-user-photo" alt="Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-outline/20 bg-surface-container-highest" src="screen.png"></a></div></header>
+<main class="flex-grow w-full relative">
+    <div id="map"></div>
+    
+    <div class="fixed top-20 left-4 right-4 z-20 flex gap-2 pointer-events-none">
+        <div class="flex-1 bg-surface-container/95 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 shadow-lg shadow-black/40 pointer-events-auto">
+            <span class="material-symbols-outlined text-primary">search</span>
+            <input id="search-input" class="bg-transparent border-none outline-none text-body-md text-on-surface w-full placeholder:text-on-surface-variant font-body-md" placeholder="Find courts, players..." type="text">
         </div>
-    </header>
-    <main class="flex-grow w-full relative">
-        <div id="map"></div>
+        <button class="bg-surface-container/95 backdrop-blur-md rounded-xl p-3 shadow-lg shadow-black/40 text-on-surface flex items-center justify-center hover:bg-surface-container-high transition-colors pointer-events-auto">
+            <span class="material-symbols-outlined">tune</span>
+        </button>
+    </div>
 
-        <div class="fixed top-20 left-4 right-4 z-20 flex gap-2 pointer-events-none">
-            <div
-                class="flex-1 bg-surface-container/95 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 shadow-lg shadow-black/40 pointer-events-auto">
-                <span class="material-symbols-outlined text-primary">search</span>
-                <input
-                    class="bg-transparent border-none outline-none text-body-md text-on-surface w-full placeholder:text-on-surface-variant font-body-md"
-                    placeholder="Find courts, players..." type="text">
+    <a href="add-court.html" class="fixed right-4 bottom-[280px] z-30 bg-primary w-14 h-14 rounded-full flex items-center justify-center text-on-primary shadow-[4px_4px_0px_#000000] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#000000] transition-all active:shadow-none active:translate-y-1 pointer-events-auto">
+        <span class="material-symbols-outlined text-3xl">add</span>
+    </a>
+
+    <div class="fixed bottom-16 left-0 w-full z-20 bg-gradient-to-t from-background via-background/90 to-transparent pt-12 pb-6 flex flex-col gap-3 pointer-events-none">
+        <div class="px-4 flex justify-between items-end pointer-events-auto">
+            <h2 class="font-headline-md text-headline-md text-on-background uppercase tracking-tight">Courts Near You</h2>
+            <span onclick="fetchCourts()" class="font-label-sm text-primary uppercase cursor-pointer hover:underline">Refresh</span>
+        </div>
+        <div id="courts-list" class="flex overflow-x-auto gap-4 px-4 pb-4 snap-x snap-mandatory scrollbar-hide pointer-events-auto">
+            <div class="p-4 text-on-surface-variant flex items-center gap-2 font-label-bold text-label-bold"><span class="material-symbols-outlined animate-spin text-primary">sync</span> Loading courts from HoopFinder DB...</div>
+        </div>
+    </div>
+
+    <!-- Login Auth Overlay -->
+    <div id="login-overlay" class="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-full max-w-sm flex flex-col items-center gap-6 bg-surface-container p-8 rounded-2xl shadow-2xl border border-outline-variant/30">
+            <img src="screen.png" alt="HoopFinder" class="h-16 w-auto object-contain mb-2">
+            <div>
+                <h1 class="font-display-lg text-headline-lg text-primary uppercase tracking-wider">HOOPFINDER</h1>
+                <p class="font-body-md text-on-surface-variant text-sm mt-1">Authenticate to access proprietary court discovery and player networks.</p>
             </div>
-            <button
-                class="bg-surface-container/95 backdrop-blur-md rounded-xl p-3 shadow-lg shadow-black/40 text-on-surface flex items-center justify-center hover:bg-surface-container-high transition-colors pointer-events-auto">
-                <span class="material-symbols-outlined">tune</span>
+            
+            <div class="w-full flex flex-col text-left gap-2 mt-2">
+                <label class="font-label-bold text-xs text-secondary uppercase tracking-wider">Baller Username</label>
+                <input id="username" type="text" placeholder="Enter username..." class="w-full bg-surface-container-low text-on-surface font-body-md px-4 py-3 rounded-xl border border-outline-variant focus:border-primary outline-none transition-colors">
+            </div>
+
+            <button class="login-trigger w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-3 rounded-xl shadow-[4px_4px_0_#000] active:translate-y-0.5 active:shadow-[2px_2px_0_#000] transition-all flex justify-center items-center gap-2 mt-2">
+                <span class="material-symbols-outlined">login</span> Sign In With Google
             </button>
         </div>
+    </div>
+</main>
 
-        <a href="add-court.html"
-            class="fixed right-4 bottom-[280px] z-30 bg-primary w-14 h-14 rounded-full flex items-center justify-center text-on-primary shadow-[4px_4px_0px_#000000] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#000000] transition-all active:shadow-none active:translate-y-1 pointer-events-auto">
-            <span class="material-symbols-outlined text-3xl">add</span>
-        </a>
+<script>
+    function loginWithGoogle() {
+        const usernameInput = document.getElementById('username');
+        const username = usernameInput ? usernameInput.value.trim() : '';
 
-        <div
-            class="fixed bottom-16 left-0 w-full z-20 bg-gradient-to-t from-background via-background/90 to-transparent pt-12 pb-6 flex flex-col gap-3 pointer-events-none">
-            <div class="px-4 flex justify-between items-end pointer-events-auto">
-                <h2 class="font-headline-md text-headline-md text-on-background uppercase tracking-tight">Courts Near
-                    You</h2>
-                <span class="font-label-sm text-primary uppercase cursor-pointer hover:underline">Live Fetch</span>
-            </div>
-            <div id="courts-list"
-                class="flex overflow-x-auto gap-4 px-4 pb-4 snap-x snap-mandatory scrollbar-hide pointer-events-auto">
-                <div class="p-4 text-on-surface-variant flex items-center gap-2 font-label-bold text-label-bold"><span
-                        class="material-symbols-outlined animate-spin text-primary">sync</span> Loading live
-                    OpenStreetMap data...</div>
-            </div>
-        </div>
-
-        <!-- Login Auth Overlay -->
-        <div id="login-overlay"
-            class="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center">
-            <div
-                class="w-full max-w-sm flex flex-col items-center gap-6 bg-surface-container p-8 rounded-2xl shadow-2xl border border-outline-variant/30">
-                <img src="screen.png" alt="HoopSpot" class="h-16 w-auto object-contain mb-2">
-                <div>
-                    <h1 class="font-display-lg text-headline-lg text-primary uppercase tracking-wider">HOOPSPOT</h1>
-                    <p class="font-body-md text-on-surface-variant text-sm mt-1">Authenticate to access live court
-                        discovery and player networks.</p>
-                </div>
-
-                <div class="w-full flex flex-col text-left gap-2 mt-2">
-                    <label class="font-label-bold text-xs text-secondary uppercase tracking-wider">Baller
-                        Username</label>
-                    <input id="username" type="text" placeholder="Enter username..."
-                        class="w-full bg-surface-container-low text-on-surface font-body-md px-4 py-3 rounded-xl border border-outline-variant focus:border-primary outline-none transition-colors">
-                </div>
-
-                <button
-                    class="login-trigger w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-3 rounded-xl shadow-[4px_4px_0_#000] active:translate-y-0.5 active:shadow-[2px_2px_0_#000] transition-all flex justify-center items-center gap-2 mt-2">
-                    <span class="material-symbols-outlined">login</span> Sign In With Google
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // Authentication handler
-        function loginWithGoogle() {
-            const usernameInput = document.getElementById('username');
-            const username = usernameInput ? usernameInput.value.trim() : '';
-
-            if (!username) {
-                alert("Please choose a Baller Username before authenticating with Google.");
-                if (usernameInput) usernameInput.focus();
-                return;
-            }
-
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    document.cookie = `hexadune_player_id=${encodeURIComponent(username)}; max-age=86400; path=/`;
-                    document.cookie = `hoopspot_username=${encodeURIComponent(username)}; max-age=86400; path=/`;
-                    document.getElementById('login-overlay').classList.add('hidden');
-                    if (result.user && result.user.photoURL) {
-                        document.getElementById('header-user-photo').src = result.user.photoURL;
-                    }
-                })
-                .catch((error) => {
-                    console.error("Auth error:", error);
-                    alert("Authentication failed: " + error.message);
-                });
+        if (!username) {
+            alert("Please choose a Baller Username before authenticating with Google.");
+            if (usernameInput) usernameInput.focus();
+            return;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const triggers = document.querySelectorAll('.login-trigger');
-            triggers.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    loginWithGoogle();
-                });
-            });
-        });
-
-        auth.onAuthStateChanged((user) => {
-            const overlay = document.getElementById('login-overlay');
-            const userPhoto = document.getElementById('header-user-photo');
-            if (!user) {
-                overlay.classList.remove('hidden');
-            } else {
-                overlay.classList.add('hidden');
-                if (userPhoto && user.photoURL) {
-                    userPhoto.src = user.photoURL;
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                document.cookie = `hoopfinder_player_id=${encodeURIComponent(username)}; max-age=86400; path=/`;
+                document.cookie = `hoopfinder_username=${encodeURIComponent(username)}; max-age=86400; path=/`;
+                document.getElementById('login-overlay').classList.add('hidden');
+                if(result.user && result.user.photoURL) {
+                    document.getElementById('header-user-photo').src = result.user.photoURL;
                 }
-            }
-        });
-
-        const map = new maplibregl.Map({
-            container: 'map',
-            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-            center: [-75.1652, 39.9526],
-            zoom: 13,
-            pitch: 45
-        });
-
-        map.on('load', () => {
-            map.loadImage('screen.png', (error, image) => {
-                if (error) throw error;
-                map.addImage('court-pin', image);
-            });
-
-            map.addSource('courts', {
-                type: 'geojson',
-                data: {type: 'FeatureCollection', features: []}
-            });
-
-            map.addLayer({
-                id: 'courts-layer',
-                type: 'symbol',
-                source: 'courts',
-                layout: {
-                    'icon-image': 'court-pin',
-                    'icon-size': 0.15,
-                    'icon-allow-overlap': true,
-                    'icon-offset': [0, -50]
-                }
-            });
-
-            map.on('click', 'courts-layer', (e) => {
-                const props = e.features[0].properties;
-                window.location.href = `court-details.html?id=${props.id}&type=${props.osm_type}`;
-            });
-
-            map.on('mouseenter', 'courts-layer', () => map.getCanvas().style.cursor = 'pointer');
-            map.on('mouseleave', 'courts-layer', () => map.getCanvas().style.cursor = '');
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        map.flyTo({center: [pos.coords.longitude, pos.coords.latitude], zoom: 14});
-                        setTimeout(fetchCourts, 1500);
-                    },
-                    (err) => {console.warn("Geoloc failed", err); fetchCourts();}
-                );
-            } else {
                 fetchCourts();
-            }
-        });
-
-        let debounceTimer;
-        map.on('moveend', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(fetchCourts, 800);
-        });
-
-        async function fetchCourts() {
-            const bounds = map.getBounds();
-            const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
-            const query = `[out:json][timeout:25];nwr["leisure"="pitch"]["sport"="basketball"](${bbox});out center;`;
-
-            try {
-                const response = await fetch(`https://overpass-api.de/api/interpreter`, {
-                    method: 'POST',
-                    body: `data=${encodeURIComponent(query)}`
-                });
-                const data = await response.json();
-
-                const features = data.elements.map(el => {
-                    const lat = el.lat || el.center.lat;
-                    const lon = el.lon || el.center.lon;
-                    return {
-                        type: 'Feature',
-                        geometry: {type: 'Point', coordinates: [lon, lat]},
-                        properties: {
-                            id: el.id,
-                            osm_type: el.type,
-                            name: el.tags.name || 'Local Public Court',
-                            surface: el.tags.surface || 'Asphalt',
-                            hoops: el.tags.hoops || 'Unknown',
-                            lit: el.tags.lit || 'Unknown'
-                        }
-                    };
-                });
-
-                map.getSource('courts').setData({type: 'FeatureCollection', features: features});
-                renderBottomSheet(features);
-            } catch (e) {
-                console.error('Error fetching courts from OSM', e);
-            }
-        }
-
-        function renderBottomSheet(features) {
-            const container = document.getElementById('courts-list');
-            container.innerHTML = '';
-            if (features.length === 0) {
-                container.innerHTML = '<div class="p-4 text-on-surface-variant font-body-md">No courts found in this area. Move map to explore.</div>';
-                return;
-            }
-
-            const center = map.getCenter();
-            features.sort((a, b) => {
-                const d1 = getDistanceFromLatLonInMi(center.lat, center.lng, a.geometry.coordinates[1], a.geometry.coordinates[0]);
-                const d2 = getDistanceFromLatLonInMi(center.lat, center.lng, b.geometry.coordinates[1], b.geometry.coordinates[0]);
-                return d1 - d2;
+            })
+            .catch((error) => {
+                console.error("Auth error:", error);
+                alert("Authentication failed: " + error.message);
             });
+    }
 
-            features.forEach(f => {
-                const dist = getDistanceFromLatLonInMi(center.lat, center.lng, f.geometry.coordinates[1], f.geometry.coordinates[0]);
-                const props = f.properties;
+    document.addEventListener('DOMContentLoaded', () => {
+        const triggers = document.querySelectorAll('.login-trigger');
+        triggers.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginWithGoogle();
+            });
+        });
+    });
 
-                const html = `
-            <a href="court-details.html?id=${props.id}&type=${props.osm_type}" class="min-w-[280px] w-[280px] bg-surface-container rounded-xl overflow-hidden snap-center flex flex-col shadow-lg shadow-black/50 block cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all">
+    auth.onAuthStateChanged((user) => {
+        const overlay = document.getElementById('login-overlay');
+        const userPhoto = document.getElementById('header-user-photo');
+        if (!user) {
+            overlay.classList.remove('hidden');
+        } else {
+            overlay.classList.add('hidden');
+            if (userPhoto && user.photoURL) {
+                userPhoto.src = user.photoURL;
+            }
+            fetchCourts();
+        }
+    });
+
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+        center: [-75.1652, 39.9526],
+        zoom: 13,
+        pitch: 45
+    });
+
+    map.on('load', () => {
+        map.loadImage('screen.png', (error, image) => {
+            if (error) throw error;
+            map.addImage('court-pin', image);
+        });
+
+        map.addSource('courts', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] }
+        });
+
+        map.addLayer({
+            id: 'courts-layer',
+            type: 'symbol',
+            source: 'courts',
+            layout: {
+                'icon-image': 'court-pin',
+                'icon-size': 0.15,
+                'icon-allow-overlap': true,
+                'icon-offset': [0, -50]
+            }
+        });
+
+        map.on('click', 'courts-layer', (e) => {
+            const props = e.features[0].properties;
+            window.location.href = `court-details.html?id=${props.id}`;
+        });
+
+        map.on('mouseenter', 'courts-layer', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'courts-layer', () => map.getCanvas().style.cursor = '');
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    map.flyTo({center: [pos.coords.longitude, pos.coords.latitude], zoom: 14});
+                    setTimeout(fetchCourts, 1000);
+                },
+                (err) => { console.warn("Geoloc failed", err); fetchCourts(); }
+            );
+        } else {
+            fetchCourts();
+        }
+    });
+
+    let debounceTimer;
+    map.on('moveend', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(fetchCourts, 800);
+    });
+
+    async function fetchCourts() {
+        if (!auth.currentUser) return;
+        const center = map.getCenter();
+        try {
+            const res = await fetchWithAuth(`${API_BASE_URL}/courts?lat=${center.lat}&lng=${center.lng}&radius=25`);
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            const data = await res.json();
+            
+            const courts = data.courts || [];
+            const features = courts.map(c => {
+                const lat = c.coordinates ? c.coordinates[1] : (c.lat || 39.9526);
+                const lon = c.coordinates ? c.coordinates[0] : (c.lng || -75.1652);
+                return {
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: [lon, lat] },
+                    properties: {
+                        id: c.id,
+                        name: c.courtName || c.name || 'Proprietary HoopFinder Court',
+                        surface: c.surfaceType || c.surface || 'Asphalt',
+                        hoops: c.hoops || 'Full Court (2 Hoops)',
+                        lit: c.lit || 'Yes'
+                    }
+                };
+            });
+            
+            if (map.getSource('courts')) {
+                map.getSource('courts').setData({ type: 'FeatureCollection', features: features });
+            }
+            renderBottomSheet(features);
+        } catch (e) {
+            console.error('Error fetching proprietary court data:', e);
+            document.getElementById('courts-list').innerHTML = `<div class="p-4 text-error font-body-md">Unable to load courts from API. (${e.message})</div>`;
+        }
+    }
+
+    function renderBottomSheet(features) {
+        const container = document.getElementById('courts-list');
+        container.innerHTML = '';
+        if (features.length === 0) {
+            container.innerHTML = '<div class="p-4 text-on-surface-variant font-body-md">No HoopFinder courts found in this area. Move map or add a court.</div>';
+            return;
+        }
+        
+        const center = map.getCenter();
+        features.sort((a,b) => {
+            const d1 = getDistanceFromLatLonInMi(center.lat, center.lng, a.geometry.coordinates[1], a.geometry.coordinates[0]);
+            const d2 = getDistanceFromLatLonInMi(center.lat, center.lng, b.geometry.coordinates[1], b.geometry.coordinates[0]);
+            return d1 - d2;
+        });
+
+        features.forEach(f => {
+            const dist = getDistanceFromLatLonInMi(center.lat, center.lng, f.geometry.coordinates[1], f.geometry.coordinates[0]);
+            const props = f.properties;
+            
+            const html = `
+            <a href="court-details.html?id=${props.id}" class="min-w-[280px] w-[280px] bg-surface-container rounded-xl overflow-hidden snap-center flex flex-col shadow-lg shadow-black/50 block cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all">
                 <div class="h-32 w-full bg-surface-container-highest relative flex flex-col items-center justify-center p-4 text-center">
-                    <span class="material-symbols-outlined text-4xl text-outline mb-2">sports_basketball</span>
-                    <span class="font-label-bold text-xs text-secondary bg-surface-container px-2 py-0.5 rounded shadow-sm">OSM ID: ${props.id}</span>
+                    <span class="material-symbols-outlined text-4xl text-primary mb-2">sports_basketball</span>
+                    <span class="font-label-bold text-xs text-secondary bg-surface-container px-2 py-0.5 rounded shadow-sm">ID: ${props.id}</span>
                     <div class="absolute top-2 right-2 bg-primary/90 text-on-primary px-2 py-1 rounded-sm font-label-bold text-xs shadow-sm shadow-black backdrop-blur-sm">${dist.toFixed(1)} MI</div>
                 </div>
                 <div class="p-3 flex flex-col gap-1 border-t border-outline-variant/30">
@@ -339,30 +290,13 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 mt-2">
-                        <span class="font-label-bold text-xs text-on-surface bg-surface-variant px-2 py-0.5 rounded-sm">LIT: ${props.lit.toUpperCase()}</span>
+                        <span class="font-label-bold text-xs text-on-surface bg-surface-variant px-2 py-0.5 rounded-sm">LIT: ${String(props.lit).toUpperCase()}</span>
+                        <span class="font-label-bold text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-sm uppercase">VERIFIED HOOPFINDER</span>
                     </div>
                 </div>
             </a>`;
-                container.insertAdjacentHTML('beforeend', html);
-            });
-        }
-    </script>
-    <nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.4)]">
-        <div class="flex justify-around items-center h-16"><a aria-current="page"
-                class="flex flex-col items-center justify-center w-16 h-full transition-all text-primary scale-110"
-                href="index.html"><span class="material-symbols-outlined"
-                    style="font-variation-settings: 'FILL' 1;">map</span><span
-                    class="font-label-sm text-label-sm">Home</span></a><a
-                class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface"
-                href="explore.html"><span class="material-symbols-outlined">explore</span><span
-                    class="font-label-sm text-label-sm">Explore</span></a><a
-                class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface"
-                href="activity.html"><span class="material-symbols-outlined">sports_basketball</span><span
-                    class="font-label-sm text-label-sm">Activity</span></a><a
-                class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface"
-                href="profile.html"><span class="material-symbols-outlined">person_outline</span><span
-                    class="font-label-sm text-label-sm">Profile</span></a></div>
-    </nav>
-</body>
-
-</html>
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    }
+</script>
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.4)]"><div class="flex justify-around items-center h-16"><a aria-current="page" class="flex flex-col items-center justify-center w-16 h-full transition-all text-primary scale-110" href="index.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span><span class="font-label-sm text-label-sm">Home</span></a><a class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface" href="explore.html"><span class="material-symbols-outlined">explore</span><span class="font-label-sm text-label-sm">Explore</span></a><a class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface" href="activity.html"><span class="material-symbols-outlined">sports_basketball</span><span class="font-label-sm text-label-sm">Activity</span></a><a class="flex flex-col items-center justify-center w-16 h-full transition-all text-on-surface-variant hover:text-on-surface" href="profile.html"><span class="material-symbols-outlined">person_outline</span><span class="font-label-sm text-label-sm">Profile</span></a></div></nav></body></html>
