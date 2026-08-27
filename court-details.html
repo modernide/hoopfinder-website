@@ -15,7 +15,7 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script id="tailwind-config">
-tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] } } } };
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
 </script>
 <style>
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
@@ -49,6 +49,22 @@ async function fetchWithAuth(url, options = {}) {
     options.headers = headers;
     return fetch(url, options);
 }
+
+function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
+    var R = 3958.8;
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+function deg2rad(deg) { return deg * (Math.PI / 180); }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+}
 </script>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -79,8 +95,15 @@ async function fetchWithAuth(url, options = {}) {
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
-    } else if (typeof onAuthReady === 'function') {
-        onAuthReady(user);
+    } else {
+        console.log("Welcome, " + user.displayName);
+        const userPhoto = document.getElementById('header-user-photo');
+        if (userPhoto && user.photoURL) {
+            userPhoto.src = user.photoURL;
+        }
+        if (typeof onAuthReady === 'function') {
+            onAuthReady(user);
+        }
     }
 });
 
@@ -112,11 +135,18 @@ async function onAuthReady(user) {
         const access = court.access || 'Free Public Access';
         const surface = court.surfaceType || court.surface || 'Asphalt';
         const lit = court.lit || 'Yes';
+        const imageUrl = court.imageUrl;
         const clat = court.coordinates ? court.coordinates[1] : (court.lat || 39.9526);
         const clon = court.coordinates ? court.coordinates[0] : (court.lng || -75.1652);
         
+        const imageHeaderHtml = imageUrl 
+            ? `<div class="w-full h-[35vh] min-h-[250px] relative border-b border-surface-container-highest overflow-hidden">
+                <img src="${imageUrl}" class="w-full h-full object-cover">
+               </div>`
+            : `<div id="detail-map" class="w-full h-[30vh] min-h-[250px] relative border-b border-surface-container-highest"></div>`;
+
         const html = `
-        <div id="detail-map" class="w-full h-[30vh] min-h-[250px] relative border-b border-surface-container-highest"></div>
+        ${imageHeaderHtml}
         
         <div class="px-margin-mobile flex flex-col gap-lg py-md mt-4">
             <div>
@@ -172,6 +202,8 @@ async function onAuthReady(user) {
                     </div>
                 </div>
             </div>
+
+            ${imageUrl ? `<div id="detail-map" class="w-full h-[200px] relative rounded-xl border border-surface-container-highest overflow-hidden mt-2"></div>` : ''}
         </div>`;
         document.getElementById('court-content').innerHTML = html;
         
