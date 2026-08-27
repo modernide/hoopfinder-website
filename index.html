@@ -137,10 +137,13 @@ function deg2rad(deg) { return deg * (Math.PI / 180); }
 
 <script>
 // Bottom Sheet Logic
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+
 const bottomSheet = document.getElementById('bottom-sheet');
 const sheetHeader = document.getElementById('sheet-header');
 const sheetIcon = document.getElementById('sheet-icon');
 const fab = document.getElementById('add-court-fab');
+
 let isSheetExpanded = false;
 
 function toggleSheet() {
@@ -176,7 +179,7 @@ sheetHeader.addEventListener('touchend', (e) => {
 });
 
 
-function loginWithGoogle() {
+async function loginWithGoogle() {
     const usernameInput = document.getElementById('username');
     const username = usernameInput ? usernameInput.value.trim() : '';
 
@@ -186,21 +189,28 @@ function loginWithGoogle() {
         return;
     }
 
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            document.cookie = `hoopfinder_player_id=${encodeURIComponent(username)}; max-age=86400; path=/`;
-            document.cookie = `hoopfinder_username=${encodeURIComponent(username)}; max-age=86400; path=/`;
-            document.getElementById('login-overlay').classList.add('hidden');
-            if(result.user && result.user.photoURL) {
-                document.getElementById('header-user-photo').src = result.user.photoURL;
-            }
-            fetchCourts();
-        })
-        .catch((error) => {
-            console.error("Auth error:", error);
-            alert("Authentication failed: " + error.message);
-        });
+    try {
+        // 1. Trigger Native iOS Google Sign-In window
+        const result = await FirebaseAuthentication.signInWithGoogle();
+
+        // 2. Pass the native Google credential to Firebase Auth JS
+        const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
+        const userCredential = await auth.signInWithCredential(credential);
+
+        // 3. Set cookies / app state
+        document.cookie = `hoopfinder_player_id=${encodeURIComponent(username)}; max-age=86400; path=/`;
+        document.cookie = `hoopfinder_username=${encodeURIComponent(username)}; max-age=86400; path=/`;
+        
+        document.getElementById('login-overlay').classList.add('hidden');
+        if (userCredential.user && userCredential.user.photoURL) {
+            document.getElementById('header-user-photo').src = userCredential.user.photoURL;
+        }
+        
+        fetchCourts();
+    } catch (error) {
+        console.error("Native Auth error:", error);
+        alert("Authentication failed: " + error.message);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
