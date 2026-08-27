@@ -21,6 +21,9 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-second
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
 ::-webkit-scrollbar { display: none; }
 #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+.maplibregl-popup-content { background-color: #201f1f; color: #e5e2e1; border: 1px solid #5b4039; border-radius: 8px; padding: 12px; }
+.maplibregl-popup-tip { border-top-color: #5b4039 !important; border-bottom-color: #5b4039 !important; }
+.maplibregl-popup-close-button { color: #e5e2e1; font-size: 16px; padding: 4px; }
 </style>
 <script>
 const firebaseConfig = {
@@ -181,37 +184,9 @@ const map = new maplibregl.Map({
     pitch: 45
 });
 
+let mapMarkers = [];
+
 map.on('load', () => {
-    map.loadImage('logosvg.svg', (error, image) => {
-        if (error) throw error;
-        map.addImage('court-pin', image);
-    });
-
-    map.addSource('courts', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: [] }
-    });
-
-    map.addLayer({
-        id: 'courts-layer',
-        type: 'symbol',
-        source: 'courts',
-        layout: {
-            'icon-image': 'court-pin',
-            'icon-size': 0.15,
-            'icon-allow-overlap': true,
-            'icon-offset': [0, -50]
-        }
-    });
-
-    map.on('click', 'courts-layer', (e) => {
-        const props = e.features[0].properties;
-        window.location.href = `court-details.html?id=${props.id}`;
-    });
-
-    map.on('mouseenter', 'courts-layer', () => map.getCanvas().style.cursor = 'pointer');
-    map.on('mouseleave', 'courts-layer', () => map.getCanvas().style.cursor = '');
-
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (pos) => {
@@ -238,18 +213,43 @@ async function fetchCourts() {
         const res = await fetchWithAuth(`${API_BASE_URL}/courts?lat=${center.lat}&lng=${center.lng}&radius=25`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
-        
         const courts = data.courts || [];
+        
+        // Remove old markers
+        mapMarkers.forEach(marker => marker.remove());
+        mapMarkers = [];
+
         const features = courts.map(c => {
             const lat = c.coordinates ? c.coordinates[1] : (c.lat || 39.9526);
             const lon = c.coordinates ? c.coordinates[0] : (c.lng || -75.1652);
+            const name = c.courtName || c.name || 'Proprietary HoopFinder Court';
+            const surface = c.surfaceType || c.surface || 'Asphalt';
+            const id = c.id;
+
+            // Create a native MapLibre Marker and Popup
+            const popupHtml = `
+                <div class="flex flex-col gap-1 min-w-[140px] pr-2">
+                    <h3 class="font-headline-md text-primary text-sm uppercase leading-tight">${name}</h3>
+                    <p class="font-body-md text-xs text-on-surface-variant mb-1">${surface}</p>
+                    <a href="court-details.html?id=${id}" class="bg-primary text-on-primary text-center rounded py-1 font-label-bold text-[10px] uppercase block w-full hover:bg-primary/80">View Court</a>
+                </div>
+            `;
+            const popup = new maplibregl.Popup({ offset: 25 }).setHTML(popupHtml);
+
+            const marker = new maplibregl.Marker({ color: '#ff5722' })
+                .setLngLat([lon, lat])
+                .setPopup(popup)
+                .addTo(map);
+
+            mapMarkers.push(marker);
+
             return {
                 type: 'Feature',
                 geometry: { type: 'Point', coordinates: [lon, lat] },
                 properties: {
                     id: c.id,
-                    name: c.courtName || c.name || 'Proprietary HoopFinder Court',
-                    surface: c.surfaceType || c.surface || 'Asphalt',
+                    name: name,
+                    surface: surface,
                     hoops: c.hoops || c.courtCount || '1 Court',
                     lit: c.lit || 'Yes',
                     imageUrl: c.imageUrl || ''
@@ -257,9 +257,6 @@ async function fetchCourts() {
             };
         });
         
-        if (map.getSource('courts')) {
-            map.getSource('courts').setData({ type: 'FeatureCollection', features: features });
-        }
         renderBottomSheet(features);
     } catch (e) {
         console.error('Error fetching proprietary court data:', e);
