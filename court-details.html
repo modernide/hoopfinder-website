@@ -49,26 +49,10 @@ async function fetchWithAuth(url, options = {}) {
     options.headers = headers;
     return fetch(url, options);
 }
-
-function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
-    var R = 3958.8;
-    var dLat = deg2rad(lat2 - lat1);
-    var dLon = deg2rad(lon2 - lon1);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-function deg2rad(deg) { return deg * (Math.PI / 180); }
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
-    return null;
-}
 </script>
 </head>
 <body class="min-h-screen flex flex-col">
-<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto">
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe border-b border-surface-container-highest pointer-events-auto">
   <div class="h-16 px-margin-mobile flex items-center gap-md">
     <a href="javascript:history.back()" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface">
       <span class="material-symbols-outlined">arrow_back</span>
@@ -78,11 +62,11 @@ function getCookie(name) {
       <span class="font-headline-md text-headline-md text-on-surface uppercase truncate">Court Details</span>
     </div>
     <a href="profile.html">
-      <img id="header-user-photo" alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline/20 bg-surface-container-highest" src="logosvg.svg">
+      <img id="header-user-photo" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30 bg-surface-container-highest" src="logosvg.svg">
     </a>
   </div>
 </header>
-<main class="flex-grow w-full pt-16 bg-background">
+<main class="flex-grow w-full pt-16 bg-background pb-20">
     <div id="court-content" class="flex flex-col w-full pb-safe">
         <div class="text-center p-xl mt-xl flex flex-col items-center">
             <span class="material-symbols-outlined animate-spin text-primary text-4xl mb-4">sync</span>
@@ -95,15 +79,8 @@ function getCookie(name) {
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
-    } else {
-        console.log("Welcome, " + user.displayName);
-        const userPhoto = document.getElementById('header-user-photo');
-        if (userPhoto && user.photoURL) {
-            userPhoto.src = user.photoURL;
-        }
-        if (typeof onAuthReady === 'function') {
-            onAuthReady(user);
-        }
+    } else if (typeof onAuthReady === 'function') {
+        onAuthReady(user);
     }
 });
 
@@ -143,7 +120,7 @@ async function onAuthReady(user) {
             ? `<div class="w-full h-[35vh] min-h-[250px] relative border-b border-surface-container-highest overflow-hidden">
                 <img src="${imageUrl}" class="w-full h-full object-cover">
                </div>`
-            : `<div id="detail-map" class="w-full h-[30vh] min-h-[250px] relative border-b border-surface-container-highest"></div>`;
+            : '';
 
         const html = `
         ${imageHeaderHtml}
@@ -152,18 +129,18 @@ async function onAuthReady(user) {
             <div>
                 <div class="flex justify-between items-start gap-2">
                     <h1 class="font-display-lg text-headline-lg text-on-background leading-tight uppercase flex-1">${name}</h1>
-                    <div class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-lg font-label-bold text-headline-md flex items-center gap-1 shadow-sm">
+                    <div class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-lg font-label-bold text-headline-md flex items-center gap-1">
                         <span>${rating}</span><span class="text-xs text-primary/70">/ 5.0</span>
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-xs mt-2">
-                    <span class="font-label-bold text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded uppercase">ID: ${court.id}</span>
-                    <span class="font-label-bold text-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded uppercase">${access}</span>
+                    <span class="font-label-bold text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30 uppercase">ID: ${court.id}</span>
+                    <span class="font-label-bold text-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20 uppercase">${access}</span>
                 </div>
             </div>
 
             <div class="flex gap-sm">
-                <button onclick="alert('Check-in feature updated in backend!')" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs shadow-[4px_4px_0_#000] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all">
+                <button onclick="alert('Check-in feature updated in backend!')" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors">
                     <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In
                 </button>
             </div>
@@ -203,7 +180,22 @@ async function onAuthReady(user) {
                 </div>
             </div>
 
-            ${imageUrl ? `<div id="detail-map" class="w-full h-[200px] relative rounded-xl border border-surface-container-highest overflow-hidden mt-2"></div>` : ''}
+            <div class="flex flex-col gap-sm mt-2">
+                <h2 class="font-headline-md text-headline-md text-on-background uppercase mb-xs flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span> Location
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-sm mb-2">
+                    <a href="https://maps.apple.com/?q=${clat},${clon}" target="_blank" class="bg-surface-container rounded-lg p-sm flex items-center justify-center gap-xs font-label-bold text-label-bold text-on-surface border border-outline-variant/30 hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">explore</span> Apple Maps
+                    </a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${clat},${clon}" target="_blank" class="bg-surface-container rounded-lg p-sm flex items-center justify-center gap-xs font-label-bold text-label-bold text-on-surface border border-outline-variant/30 hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">map</span> Google Maps
+                    </a>
+                </div>
+
+                <div id="detail-map" class="w-full h-[300px] relative rounded-xl border border-surface-container-highest overflow-hidden"></div>
+            </div>
         </div>`;
         document.getElementById('court-content').innerHTML = html;
         
@@ -211,9 +203,12 @@ async function onAuthReady(user) {
             container: 'detail-map',
             style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
             center: [clon, clat],
-            zoom: 16,
-            interactive: false
+            zoom: 15,
+            interactive: true
         });
+
+        detailMap.addControl(new maplibregl.NavigationControl(), 'top-right');
+
         detailMap.on('load', () => {
             detailMap.loadImage('logosvg.svg', (error, image) => {
                 if (error) throw error;
