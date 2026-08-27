@@ -207,22 +207,13 @@ async function onAuthReady(user) {
             interactive: true
         });
 
-        detailMap.addControl(new maplibregl.NavigationControl(), 'top-right');
+        detailMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-        detailMap.on('load', () => {
-            detailMap.loadImage('logosvg.svg', (error, image) => {
-                if (error) throw error;
-                detailMap.addImage('court-pin', image);
-                detailMap.addSource('court', {
-                    type: 'geojson',
-                    data: { type: 'Feature', geometry: { type: 'Point', coordinates: [clon, clat] } }
-                });
-                detailMap.addLayer({
-                    id: 'court-layer', type: 'symbol', source: 'court',
-                    layout: { 'icon-image': 'court-pin', 'icon-size': 0.25, 'icon-offset': [0,-40] }
-                });
-            });
-        });
+        // Add a standard MapLibre marker for the location
+        new maplibregl.Marker({ color: '#ff5722' })
+            .setLngLat([clon, clat])
+            .addTo(detailMap);
+
     } catch (e) {
         console.error('Error fetching court details:', e);
         document.getElementById('court-content').innerHTML = `<div class="p-xl text-center"><p class="text-error font-body-md">Failed to load court details from database (${e.message}).</p></div>`;
