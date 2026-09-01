@@ -6,21 +6,17 @@
 <title>HoopFinder - Activity Feed</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet">
-<link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
-<script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script id="tailwind-config">
-tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#3c494f", "background": "#131313", "secondary-container": "#3c494f", "surface-container-lowest": "#0e0e0e", "secondary-fixed": "#d7e4ec", "on-primary-fixed": "#3b0900", "surface-container-highest": "#353534", "on-tertiary-fixed-variant": "#454747", "secondary": "#bbc8d0", "on-primary": "#5f1500", "inverse-surface": "#e5e2e1", "outline-variant": "#5b4039", "surface-tint": "#ffb5a0", "surface-variant": "#353534", "primary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#c6c6c7", "secondary-fixed-dim": "#bbc8d0", "error-container": "#93000a", "surface-bright": "#393939", "on-tertiary-fixed": "#1a1c1c", "inverse-primary": "#b02f00", "surface-container-high": "#2a2a2a", "tertiary": "#c6c6c7", "outline": "#ab8980", "surface": "#131313", "surface-container-low": "#1c1b1b", "on-error": "#690005", "primary-fixed": "#ffdbd1", "inverse-on-surface": "#313030", "tertiary-fixed": "#e2e2e2", "on-primary-container": "#541200", "on-background": "#e5e2e1", "error": "#ffb4ab", "surface-dim": "#131313", "primary": "#ffb5a0", "on-tertiary-container": "#282a2b", "on-tertiary": "#2f3131", "on-primary-fixed-variant": "#862200", "on-surface-variant": "#e4beb4", "tertiary-container": "#909191", "on-surface": "#e5e2e1", "on-secondary-fixed": "#111d23", "primary-container": "#ff5722", "on-secondary": "#263238", "surface-container": "#201f1f", "on-error-container": "#ffdad6", "on-secondary-container": "#aab7bf" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "gutter-mobile": "12px", "base": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-lg-mobile": ["Archivo Narrow"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#131313", "secondary": "#bbc8d0", "outline-variant": "#5b4039", "surface-variant": "#353534", "surface": "#131313", "primary": "#ffb5a0", "on-background": "#e5e2e1", "on-surface-variant": "#e4beb4", "on-surface": "#e5e2e1", "on-primary": "#5f1500", "surface-container": "#201f1f", "surface-container-highest": "#353534", "tertiary": "#c6c6c7" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
 </script>
 <style>
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
 ::-webkit-scrollbar { display: none; }
-#map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
 </style>
 <script>
 const firebaseConfig = {
@@ -50,15 +46,6 @@ async function fetchWithAuth(url, options = {}) {
     return fetch(url, options);
 }
 
-function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
-    var R = 3958.8;
-    var dLat = deg2rad(lat2 - lat1);
-    var dLon = deg2rad(lon2 - lon1);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-function deg2rad(deg) { return deg * (Math.PI / 180); }
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -79,45 +66,18 @@ function getCookie(name) {
     </a>
   </div>
 </header>
+
 <main class="flex-grow w-full pt-16 pb-24 bg-background">
   <div class="px-margin-mobile pt-md flex flex-col gap-md">
       <div class="flex justify-between items-end border-b border-surface-container-highest pb-2 mb-2">
           <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Live Feed</h2>
-          <span class="font-label-bold text-label-bold text-secondary uppercase">HoopFinder Network</span>
+          <button onclick="loadActivityFeed()" class="font-label-bold text-label-bold text-primary uppercase hover:underline">Refresh</button>
       </div>
 
       <div id="activity-feed-container" class="flex flex-col gap-md">
-          <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col gap-sm">
-              <div class="flex items-center gap-sm">
-                  <div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-headline-md">AJ</div>
-                  <div class="flex flex-col">
-                      <span class="font-label-bold text-label-bold text-on-surface">Alex Johnson</span>
-                      <span class="font-label-sm text-label-sm text-tertiary">10 mins ago</span>
-                  </div>
-              </div>
-              <p class="font-body-md text-body-md text-on-surface-variant">Checked into a HoopFinder court. "Full court run, need 1 more!"</p>
-          </div>
-
-          <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col gap-sm">
-              <div class="flex items-center gap-sm">
-                  <div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center"><span class="material-symbols-outlined">verified</span></div>
-                  <div class="flex flex-col">
-                      <span class="font-label-bold text-label-bold text-on-surface">HoopFinder System</span>
-                      <span class="font-label-sm text-label-sm text-tertiary">45 mins ago</span>
-                  </div>
-              </div>
-              <p class="font-body-md text-body-md text-on-surface-variant">Proprietary HoopFinder Database connected & active.</p>
-          </div>
-
-          <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col gap-sm">
-              <div class="flex items-center gap-sm">
-                  <img id="feed-user-photo" alt="Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-outline/20 bg-surface-container-highest" src="logosvg.svg">
-                  <div class="flex flex-col">
-                      <span id="feed-user-name" class="font-label-bold text-label-bold text-on-surface">You</span>
-                      <span class="font-label-sm text-label-sm text-tertiary">Recently</span>
-                  </div>
-              </div>
-              <p class="font-body-md text-body-md text-on-surface-variant">Authenticated via Google & connected to serverless HoopFinder API.</p>
+          <div class="text-center p-xl flex flex-col items-center justify-center">
+              <span class="material-symbols-outlined animate-spin text-primary text-4xl mb-4">sync</span>
+              <p class="font-body-md text-on-surface-variant">Syncing live check-ins from HoopFinder Network...</p>
           </div>
       </div>
   </div>
@@ -128,45 +88,90 @@ auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
     } else {
-        console.log("Welcome, " + user.displayName);
         const userPhoto = document.getElementById('header-user-photo');
         if (userPhoto && user.photoURL) {
             userPhoto.src = user.photoURL;
         }
-        if (typeof onAuthReady === 'function') {
-            onAuthReady(user);
-        }
+        loadActivityFeed(user);
     }
 });
 
-async function onAuthReady(user) {
-    if(user.photoURL) document.getElementById('feed-user-photo').src = user.photoURL;
-    if(user.displayName) document.getElementById('feed-user-name').innerText = user.displayName;
-    
+function timeAgo(dateString) {
+    if (!dateString) return 'Recently';
+    const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+    if (seconds < 60) return 'Just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+}
+
+async function loadActivityFeed(user) {
+    const container = document.getElementById('activity-feed-container');
+    const currentUser = user || auth.currentUser;
+    const username = getCookie('hoopfinder_player_id') || getCookie('hoopfinder_username') || (currentUser ? currentUser.displayName : 'Baller');
+
     try {
         const res = await fetchWithAuth(`${API_BASE_URL}/activity`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data.activities && data.activities.length > 0) {
-                const container = document.getElementById('activity-feed-container');
-                data.activities.forEach(item => {
-                    const html = `
-                    <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col gap-sm">
-                        <div class="flex items-center gap-sm">
-                            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-headline-md">${(item.user || 'U').substring(0,2).toUpperCase()}</div>
-                            <div class="flex flex-col">
-                                <span class="font-label-bold text-label-bold text-on-surface">${item.user || 'Anonymous'}</span>
-                                <span class="font-label-sm text-label-sm text-tertiary">Recently</span>
-                            </div>
-                        </div>
-                        <p class="font-body-md text-body-md text-on-surface-variant">${item.message || 'Activity reported'}</p>
-                    </div>`;
-                    container.insertAdjacentHTML('afterbegin', html);
-                });
-            }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        
+        container.innerHTML = '';
+        const activities = data.activities || [];
+
+        if (activities.length === 0) {
+            container.innerHTML = `
+                <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col items-center text-center gap-sm py-8">
+                    <span class="material-symbols-outlined text-4xl text-primary">sports_basketball</span>
+                    <h3 class="font-headline-md text-on-surface uppercase">No Check-ins Yet</h3>
+                    <p class="font-body-md text-xs text-on-surface-variant">Be the first to check into a local park to update players on court conditions!</p>
+                    <a href="index.html" class="mt-2 bg-primary text-on-primary font-label-bold text-xs uppercase px-4 py-2 rounded-lg">Find Courts Near You</a>
+                </div>`;
+            return;
         }
-    } catch(e) {
-        console.log("Using cached feed setup");
+
+        activities.forEach(item => {
+            const userName = item.user || item.username || 'Baller';
+            const initials = userName.substring(0, 2).toUpperCase();
+            const message = item.message || 'Checked into court';
+            const timestamp = timeAgo(item.createdAt || item.timestamp);
+            const userPhoto = item.photoURL;
+
+            const avatarHtml = userPhoto 
+                ? `<img src="${userPhoto}" class="w-10 h-10 rounded-full object-cover border border-primary/30">`
+                : `<div class="w-10 h-10 rounded-full bg-primary/20 text-primary border border-primary/30 flex items-center justify-center font-headline-md">${initials}</div>`;
+
+            const html = `
+            <div class="bg-surface-container rounded-xl p-md shadow-lg border border-outline-variant/30 flex flex-col gap-sm active:scale-[0.99] transition-transform">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-sm">
+                        ${avatarHtml}
+                        <div class="flex flex-col">
+                            <span class="font-label-bold text-label-bold text-on-surface">${userName}</span>
+                            <span class="font-label-sm text-label-sm text-tertiary">${timestamp}</span>
+                        </div>
+                    </div>
+                    <span class="bg-primary/10 text-primary px-2 py-0.5 rounded font-label-bold text-[10px] uppercase border border-primary/20">LIVE</span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">${message}</p>
+            </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+    } catch (e) {
+        console.error("Activity API error:", e);
+        container.innerHTML = `
+            <div class="bg-surface-container rounded-xl p-md border border-outline-variant/30 flex flex-col gap-sm">
+                <div class="flex items-center gap-sm">
+                    <img src="${currentUser && currentUser.photoURL ? currentUser.photoURL : 'logosvg.svg'}" class="w-10 h-10 rounded-full object-cover">
+                    <div class="flex flex-col">
+                        <span class="font-label-bold text-label-bold text-on-surface">${username}</span>
+                        <span class="font-label-sm text-label-sm text-tertiary">Just Now</span>
+                    </div>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">Connected to HoopFinder Network. Check into any court on the map to share live run statuses.</p>
+            </div>`;
     }
 }
 </script>
