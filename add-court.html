@@ -20,7 +20,38 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "backgroun
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
 ::-webkit-scrollbar { display: none; }
 #add-map { width: 100%; height: 100%; min-height: 192px; }
-input[type="time"] { color-scheme: dark; }
+
+/* Native OS UI Overrides matching Check-in Component */
+input, select, textarea {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Explicit time input dark scheme reset */
+input[type="time"] {
+    color-scheme: dark;
+}
+
+/* Matching form field styling */
+.input-field {
+    background-color: #201f1f;
+    color: #e5e2e1;
+    border: 1px solid rgba(91, 64, 57, 0.4);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    width: 100%;
+    box-shadow: none !important;
+    transition: border-color 0.2s ease;
+}
+
+.input-field:focus {
+    border-color: #ffb5a0;
+}
 </style>
 </head>
 <body class="min-h-screen flex flex-col bg-background text-on-background">
@@ -49,7 +80,7 @@ input[type="time"] { color-scheme: dark; }
                 <label class="font-label-bold text-label-bold text-on-surface-variant flex justify-between items-center">
                     <span>LOCATION</span><span class="text-primary cursor-pointer hover:underline text-xs" onclick="geolocate()">Use Current</span>
                 </label>
-                <div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container-low border border-outline-variant/30">
+                <div class="relative w-full h-48 rounded-xl overflow-hidden bg-surface-container border border-outline-variant/40">
                     <div id="add-map" class="absolute inset-0 z-0"></div>
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                         <img src="logosvg.svg" class="w-12 h-12 transform -translate-y-1/2">
@@ -60,22 +91,22 @@ input[type="time"] { color-scheme: dark; }
 
             <div class="flex flex-col gap-xs">
                 <label class="font-label-bold text-label-bold text-on-surface-variant">COURT PHOTO (REQUIRED)</label>
-                <input id="court-image" type="file" accept="image\/*" required class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-label-bold file:bg-primary file:text-on-primary hover:file:bg-primary-container">
+                <input id="court-image" type="file" accept="image\/*" required class="input-field file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-label-bold file:bg-primary file:text-on-primary hover:file:bg-primary-container">
             </div>
             
             <div class="flex flex-col gap-xs">
                 <label class="font-label-bold text-label-bold text-on-surface-variant">COURT NAME</label>
-                <input id="court-name" required class="bg-surface-container-low text-on-surface font-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full" placeholder="e.g. Fairmount Park Hoops">
+                <input id="court-name" required class="input-field font-body-lg" placeholder="e.g. Fairmount Park Hoops">
             </div>
 
             <div class="grid grid-cols-2 gap-md">
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">RATING (1 - 5.0)</label>
-                    <input id="court-rating" type="number" step="0.1" min="1.0" max="5.0" value="4.5" required class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <input id="court-rating" type="number" step="0.1" min="1.0" max="5.0" value="4.5" required class="input-field">
                 </div>
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">NUMBER OF COURTS</label>
-                    <select id="court-count" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <select id="court-count" class="input-field">
                         <option value="Half Court">Half Court</option>
                         <option value="1 Court" selected>1 Court</option>
                         <option value="2 Courts">2 Courts</option>
@@ -88,14 +119,14 @@ input[type="time"] { color-scheme: dark; }
             <div class="grid grid-cols-2 gap-md">
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">RIM TYPE</label>
-                    <select id="rim-type" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <select id="rim-type" class="input-field">
                         <option value="Single Rim">Single Rim</option>
                         <option value="Double Rim">Double Rim</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">COURT CONDITION</label>
-                    <select id="court-condition" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <select id="court-condition" class="input-field">
                         <option value="Pristine">Pristine</option>
                         <option value="Good" selected>Good</option>
                         <option value="Fair">Fair</option>
@@ -107,14 +138,14 @@ input[type="time"] { color-scheme: dark; }
             <div class="grid grid-cols-2 gap-md">
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">COURT ACCESS</label>
-                    <select id="court-access" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <select id="court-access" class="input-field">
                         <option value="Free Public Access">Free Public Access</option>
                         <option value="Paid / Membership Required">Paid / Membership Required</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-bold text-label-bold text-on-surface-variant">SURFACE TYPE</label>
-                    <select id="surface-type" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                    <select id="surface-type" class="input-field">
                         <option value="Asphalt">Asphalt</option>
                         <option value="Concrete">Concrete</option>
                         <option value="Hardwood">Hardwood (Indoor)</option>
@@ -124,7 +155,7 @@ input[type="time"] { color-scheme: dark; }
 
             <div class="flex flex-col gap-xs">
                 <label class="font-label-bold text-label-bold text-on-surface-variant">LIGHTING</label>
-                <select id="lighting-status" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none w-full">
+                <select id="lighting-status" class="input-field">
                     <option value="Yes">Lit at Night</option>
                     <option value="No">No Lights</option>
                 </select>
@@ -137,20 +168,20 @@ input[type="time"] { color-scheme: dark; }
                         <input type="checkbox" id="open-247" class="accent-primary" onchange="toggle247(this)"> Open 24/7
                     </label>
                 </div>
-                <div id="time-picker-container" class="flex flex-col sm:flex-row gap-md">
-                    <div class="flex-1 flex flex-col gap-xs">
+                <div id="time-picker-container" class="grid grid-cols-2 gap-md">
+                    <div class="flex flex-col gap-xs">
                         <span class="text-xs text-on-surface-variant font-label-sm uppercase">Open Time</span>
-                        <input type="time" id="open-time" value="06:00" class="bg-surface-container-low text-on-surface font-body-md px-3 py-3 rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full min-w-0">
+                        <input type="time" id="open-time" value="06:00" class="input-field min-w-0">
                     </div>
-                    <div class="flex-1 flex flex-col gap-xs">
+                    <div class="flex flex-col gap-xs">
                         <span class="text-xs text-on-surface-variant font-label-sm uppercase">Close Time</span>
-                        <input type="time" id="close-time" value="22:00" class="bg-surface-container-low text-on-surface font-body-md px-3 py-3 rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full min-w-0">
+                        <input type="time" id="close-time" value="22:00" class="input-field min-w-0">
                     </div>
                 </div>
             </div>
 
             <div class="mt-md">
-                <button type="submit" id="submit-btn" class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-md rounded-lg active:translate-y-0.5 transition-all flex justify-center items-center gap-sm">
+                <button type="submit" id="submit-btn" class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-md rounded-xl active:scale-[0.99] transition-all flex justify-center items-center gap-sm">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">publish</span> Submit Court
                 </button>
             </div>
