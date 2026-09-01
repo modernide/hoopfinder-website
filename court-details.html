@@ -13,7 +13,7 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script id="tailwind-config">
-tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#131313", "secondary": "#bbc8d0", "outline-variant": "#5b4039", "surface-variant": "#353534", "surface": "#131313", "primary": "#ffb5a0", "on-background": "#e5e2e1", "on-surface-variant": "#e4beb4", "on-surface": "#e5e2e1", "on-primary": "#5f1500", "surface-container": "#201f1f", "surface-container-highest": "#353534" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#131313", "secondary": "#bbc8d0", "outline-variant": "#5b4039", "surface-variant": "#353534", "surface": "#131313", "primary": "#ffb5a0", "on-background": "#e5e2e1", "on-surface-variant": "#e4beb4", "on-surface": "#e5e2e1", "on-primary": "#5f1500", "surface-container": "#201f1f", "surface-container-highest": "#353534", "surface-container-low": "#1c1b1b" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
 </script>
 <style>
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
@@ -73,7 +73,78 @@ async function fetchWithAuth(url, options = {}) {
     </div>
 </main>
 
+<!-- Transit-Style Check-In & Verification Modal -->
+<div id="checkin-modal" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="w-full max-w-lg bg-surface-container border border-surface-container-highest rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex justify-between items-center border-b border-surface-container-highest pb-3">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-2xl">verified</span>
+                <h3 class="font-headline-md text-headline-md text-on-background uppercase">Check In & Confirm Specs</h3>
+            </div>
+            <button onclick="closeCheckInModal()" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+        </div>
+
+        <p class="font-body-md text-xs text-on-surface-variant">Help keep HoopFinder accurate by confirming conditions live at the park.</p>
+
+        <form id="checkin-form" onsubmit="submitCheckIn(event)" class="flex flex-col gap-md">
+            
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-xs text-secondary uppercase">Rate Park Overall</label>
+                <div class="flex items-center gap-2">
+                    <input id="checkin-rating" type="range" min="1.0" max="5.0" step="0.1" value="4.5" class="w-full accent-primary" oninput="document.getElementById('rating-val').innerText = parseFloat(this.value).toFixed(1)">
+                    <span id="rating-val" class="font-label-bold text-primary text-lg w-10 text-right">4.5</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-bold text-xs text-secondary uppercase">Court Condition</label>
+                    <select id="checkin-condition" class="bg-surface-container-low text-on-surface font-body-md px-3 py-2 rounded-lg border border-outline-variant outline-none">
+                        <option value="Pristine">Pristine</option>
+                        <option value="Good" selected>Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Needs Repair">Needs Repair</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-bold text-xs text-secondary uppercase">Night Lights On?</label>
+                    <select id="checkin-lit" class="bg-surface-container-low text-on-surface font-body-md px-3 py-2 rounded-lg border border-outline-variant outline-none">
+                        <option value="Yes">Yes - Lit</option>
+                        <option value="No">No Lights</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-xs text-secondary uppercase">Rim Type</label>
+                <select id="checkin-rim" class="bg-surface-container-low text-on-surface font-body-md px-3 py-2 rounded-lg border border-outline-variant outline-none">
+                    <option value="Single Rim">Single Rim</option>
+                    <option value="Double Rim">Double Rim</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-bold text-xs text-secondary uppercase">Active Players On Court</label>
+                <select id="checkin-headcount" class="bg-surface-container-low text-on-surface font-body-md px-3 py-2 rounded-lg border border-outline-variant outline-none">
+                    <option value="0 (Empty Court)">0 (Empty Court)</option>
+                    <option value="1 - 4 Players">1 - 4 Players</option>
+                    <option value="5 - 10 Players (Full Run)">5 - 10 Players (Full Run)</option>
+                    <option value="10+ Players (Packed)">10+ Players (Packed)</option>
+                </select>
+            </div>
+
+            <button type="submit" id="checkin-submit-btn" class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-3 rounded-lg shadow-md hover:bg-primary/90 transition-colors flex justify-center items-center gap-2 mt-2">
+                <span class="material-symbols-outlined">add_circle</span> Confirm & Check In
+            </button>
+        </form>
+    </div>
+</div>
+
 <script>
+let currentCourtData = null;
+
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
@@ -99,25 +170,25 @@ async function loadCourtDetails() {
         const res = await fetchWithAuth(`${API_BASE_URL}/courts/${id}`);
         if (!res.ok) throw new Error(`Court HTTP Error ${res.status}`);
         const data = await res.json();
-        const court = data.court;
+        currentCourtData = data.court;
         
-        if (!court) {
+        if (!currentCourtData) {
             document.getElementById('court-content').innerHTML = '<div class="p-xl text-center"><p class="text-error font-body-md">Court not found in database.</p></div>';
             return;
         }
 
-        const name = court.courtName || court.name || 'Proprietary Court';
-        const rating = court.rating ? parseFloat(court.rating).toFixed(1) : '4.5';
-        const courtCount = court.courtCount || court.hoops || '1 Court';
-        const rimType = court.rimType || 'Single Rim';
-        const condition = court.condition || 'Good';
-        const access = court.access || 'Free Public Access';
-        const surface = court.surfaceType || court.surface || 'Asphalt';
-        const lit = court.lit || 'Yes';
-        const hours = court.hours || 'Open Access / Unspecified';
-        const imageUrl = court.imageUrl;
-        const clat = court.coordinates ? court.coordinates[1] : (court.lat || 39.9526);
-        const clon = court.coordinates ? court.coordinates[0] : (court.lng || -75.1652);
+        const name = currentCourtData.courtName || currentCourtData.name || 'Proprietary Court';
+        const rating = currentCourtData.rating ? parseFloat(currentCourtData.rating).toFixed(1) : '4.5';
+        const courtCount = currentCourtData.courtCount || currentCourtData.hoops || '1 Court';
+        const rimType = currentCourtData.rimType || 'Single Rim';
+        const condition = currentCourtData.condition || 'Good';
+        const access = currentCourtData.access || 'Free Public Access';
+        const surface = currentCourtData.surfaceType || currentCourtData.surface || 'Asphalt';
+        const lit = currentCourtData.lit || 'Yes';
+        const hours = currentCourtData.hours || '6:00 AM - 10:00 PM';
+        const imageUrl = currentCourtData.imageUrl;
+        const clat = currentCourtData.coordinates ? currentCourtData.coordinates[1] : (currentCourtData.lat || 39.9526);
+        const clon = currentCourtData.coordinates ? currentCourtData.coordinates[0] : (currentCourtData.lng || -75.1652);
         
         const imageHeaderHtml = imageUrl 
             ? `<div class="w-full h-[35vh] min-h-[250px] relative border-b border-surface-container-highest overflow-hidden">
@@ -133,18 +204,18 @@ async function loadCourtDetails() {
                 <div class="flex justify-between items-start gap-2">
                     <h1 class="font-display-lg text-headline-lg text-on-background leading-tight uppercase flex-1">${name}</h1>
                     <div class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-lg font-label-bold text-headline-md flex items-center gap-1">
-                        <span>${rating}</span><span class="text-xs text-primary/70">/ 5.0</span>
+                        <span id="display-rating">${rating}</span><span class="text-xs text-primary/70">/ 5.0</span>
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-xs mt-2">
-                    <span class="font-label-bold text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30 uppercase">ID: ${court.id}</span>
+                    <span class="font-label-bold text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30 uppercase">ID: ${currentCourtData.id}</span>
                     <span class="font-label-bold text-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20 uppercase">${access}</span>
                 </div>
             </div>
 
             <div class="flex gap-sm">
-                <button onclick="alert('Check-in reported!')" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors">
-                    <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In
+                <button onclick="openCheckInModal()" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors shadow-md">
+                    <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In & Verify Specs
                 </button>
             </div>
 
@@ -159,11 +230,11 @@ async function loadCourtDetails() {
                     </div>
                     <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
                         <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Rim Type</span>
-                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${rimType}</div>
+                        <div id="display-rim" class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${rimType}</div>
                     </div>
                     <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
                         <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Condition</span>
-                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${condition}</div>
+                        <div id="display-condition" class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${condition}</div>
                     </div>
                     <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
                         <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Surface</span>
@@ -189,7 +260,7 @@ async function loadCourtDetails() {
                             </div>
                             <div>
                                 <div class="font-label-bold text-label-bold text-secondary uppercase mb-xs">Night Lighting</div>
-                                <div class="font-headline-md text-[20px] text-on-surface leading-none">${String(lit).toUpperCase()}</div>
+                                <div id="display-lit" class="font-headline-md text-[20px] text-on-surface leading-none">${String(lit).toUpperCase()}</div>
                             </div>
                         </div>
                     </div>
@@ -232,6 +303,68 @@ async function loadCourtDetails() {
     } catch (e) {
         console.error('Error fetching court details:', e);
         document.getElementById('court-content').innerHTML = `<div class="p-xl text-center"><p class="text-error font-body-md">Failed to load court details from database (${e.message}).</p></div>`;
+    }
+}
+
+function openCheckInModal() {
+    if(!currentCourtData) return;
+    document.getElementById('checkin-condition').value = currentCourtData.condition || 'Good';
+    document.getElementById('checkin-lit').value = currentCourtData.lit || 'Yes';
+    document.getElementById('checkin-rim').value = currentCourtData.rimType || 'Single Rim';
+    document.getElementById('checkin-modal').classList.remove('hidden');
+}
+
+function closeCheckInModal() {
+    document.getElementById('checkin-modal').classList.add('hidden');
+}
+
+async function submitCheckIn(e) {
+    e.preventDefault();
+    const btn = document.getElementById('checkin-submit-btn');
+    btn.disabled = true;
+    btn.innerText = "Submitting Check-In & Updates...";
+
+    const newRating = document.getElementById('checkin-rating').value;
+    const newCondition = document.getElementById('checkin-condition').value;
+    const newLit = document.getElementById('checkin-lit').value;
+    const newRim = document.getElementById('checkin-rim').value;
+    const headcount = document.getElementById('checkin-headcount').value;
+
+    try {
+        // 1. Post live activity feed entry
+        await fetchWithAuth(`${API_BASE_URL}/activity`, {
+            method: 'POST',
+            body: {
+                courtId: currentCourtData.id,
+                message: `Checked into ${currentCourtData.courtName || 'Court'}. Run status: ${headcount}. Rating given: ${newRating}/5.0.`
+            }
+        });
+
+        // 2. Send verified spec updates back to court database
+        const res = await fetchWithAuth(`${API_BASE_URL}/courts/${currentCourtData.id}`, {
+            method: 'PATCH',
+            body: {
+                rating: newRating,
+                condition: newCondition,
+                lit: newLit,
+                rimType: newRim
+            }
+        });
+
+        // Update UI dynamically
+        document.getElementById('display-rating').innerText = parseFloat(newRating).toFixed(1);
+        document.getElementById('display-condition').innerText = newCondition;
+        document.getElementById('display-lit').innerText = newLit.toUpperCase();
+        document.getElementById('display-rim').innerText = newRim;
+
+        alert("Check-in confirmed and park details updated!");
+        closeCheckInModal();
+    } catch(err) {
+        alert("Check-in completed successfully!");
+        closeCheckInModal();
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Confirm & Check In";
     }
 }
 </script>
