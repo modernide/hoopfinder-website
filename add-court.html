@@ -3,18 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
-<title>HoopFinder - Add Court</title>
+<title>HoopFinder - Court Details</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script id="tailwind-config">
-tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#131313", "secondary": "#bbc8d0", "outline-variant": "#5b4039", "surface-variant": "#353534", "surface": "#131313", "surface-container-low": "#1c1b1b", "primary": "#ffb5a0", "on-background": "#e5e2e1", "on-surface-variant": "#e4beb4", "on-surface": "#e5e2e1", "primary-container": "#ff5722", "on-primary": "#5f1500", "surface-container": "#201f1f" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#131313", "secondary": "#bbc8d0", "outline-variant": "#5b4039", "surface-variant": "#353534", "surface": "#131313", "primary": "#ffb5a0", "on-background": "#e5e2e1", "on-surface-variant": "#e4beb4", "on-surface": "#e5e2e1", "on-primary": "#5f1500", "surface-container": "#201f1f", "surface-container-highest": "#353534" }, "spacing": { "sm": "8px", "margin-mobile": "16px", "xl": "32px", "xs": "4px", "lg": "24px", "md": "16px" }, "fontFamily": { "headline-lg": ["Archivo Narrow"], "label-bold": ["JetBrains Mono"], "headline-md": ["Archivo Narrow"], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Archivo Narrow"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "36px", "fontWeight": "700" }], "label-bold": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg-mobile": ["28px", { "lineHeight": "32px", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "700" }], "body-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["12px", { "lineHeight": "14px", "fontWeight": "500" }] } } } };
 </script>
 <style>
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
@@ -50,245 +49,189 @@ async function fetchWithAuth(url, options = {}) {
 </script>
 </head>
 <body class="min-h-screen flex flex-col">
-<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)] pointer-events-auto">
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe border-b border-surface-container-highest pointer-events-auto">
   <div class="h-16 px-margin-mobile flex items-center gap-md">
     <a href="javascript:history.back()" class="w-12 h-12 -ml-2 flex items-center justify-center text-on-surface">
       <span class="material-symbols-outlined">arrow_back</span>
     </a>
     <div class="flex items-center gap-sm flex-1">
       <img alt="HoopFinder Logo" class="h-6 w-auto object-contain" src="logosvg.svg">
-      <span class="font-headline-md text-headline-md text-primary uppercase truncate">Report Court</span>
+      <span class="font-headline-md text-headline-md text-on-surface uppercase truncate">Court Details</span>
     </div>
+    <a href="profile.html">
+      <img id="header-user-photo" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30 bg-surface-container-highest" src="logosvg.svg">
+    </a>
   </div>
 </header>
 
-<main class="flex-grow w-full pt-16 pb-24 bg-background">
-    <div class="flex flex-col w-full gap-md">
-        <section class="px-margin-mobile flex flex-col gap-sm mt-md">
-            <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Add Missing Court</h1>
-            <p class="font-body-md text-body-md text-on-surface-variant">Drop a pin and upload a photo to publish a court to HoopFinder.</p>
-        </section>
-        
-        <form id="add-court-form" onsubmit="submitCourt(event)" class="px-margin-mobile flex flex-col gap-lg">
-            <div class="flex flex-col gap-xs">
-                <label class="font-label-bold text-label-bold text-on-surface-variant flex justify-between items-center">
-                    <span>LOCATION</span><span class="text-primary cursor-pointer hover:underline text-xs" onclick="geolocate()">Use Current</span>
-                </label>
-                <div class="relative w-full h-48 rounded-lg overflow-hidden shadow-md">
-                    <div id="add-map" class="absolute inset-0 z-0"></div>
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                        <img src="logosvg.svg" class="w-12 h-12 drop-shadow-xl transform -translate-y-1/2">
-                    </div>
-                </div>
-                <div class="text-xs text-on-surface-variant font-label-sm mt-1">Coordinates: <span id="coord-display">...</span></div>
-            </div>
-
-            <div class="flex flex-col gap-xs">
-                <label class="font-label-bold text-label-bold text-on-surface-variant">COURT PHOTO (REQUIRED)</label>
-                <input id="court-image" type="file" accept="image/*" required class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-label-bold file:bg-primary file:text-on-primary hover:file:bg-primary-container">
-            </div>
-            
-            <div class="flex flex-col gap-xs">
-                <label class="font-label-bold text-label-bold text-on-surface-variant">COURT NAME</label>
-                <input id="court-name" required class="bg-surface-container-low text-on-surface font-body-lg px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full" placeholder="e.g. Fairmount Park Hoops">
-            </div>
-
-            <div class="grid grid-cols-2 gap-md">
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">RATING (1 - 5.0)</label>
-                    <input id="court-rating" type="number" step="0.1" min="1.0" max="5.0" value="4.5" required class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">NUMBER OF COURTS</label>
-                    <select id="court-count" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Half Court">Half Court</option>
-                        <option value="1 Court" selected>1 Court</option>
-                        <option value="2 Courts">2 Courts</option>
-                        <option value="3 Courts">3 Courts</option>
-                        <option value="4 Courts">4 Courts</option>
-                        <option value="5 Courts">5 Courts</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-md">
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">RIM TYPE</label>
-                    <select id="rim-type" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Single Rim">Single Rim</option>
-                        <option value="Double Rim">Double Rim</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">COURT CONDITION</label>
-                    <select id="court-condition" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Pristine">Pristine</option>
-                        <option value="Good" selected>Good</option>
-                        <option value="Fair">Fair</option>
-                        <option value="Needs Repair">Needs Repair</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-md">
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">COURT ACCESS</label>
-                    <select id="court-access" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Free Public Access">Free Public Access</option>
-                        <option value="Paid / Membership Required">Paid / Membership Required</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">SURFACE TYPE</label>
-                    <select id="surface-type" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Asphalt">Asphalt</option>
-                        <option value="Concrete">Concrete</option>
-                        <option value="Hardwood">Hardwood (Indoor)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-md">
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">LIGHTING</label>
-                    <select id="lighting-status" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary outline-none">
-                        <option value="Yes">Lit at Night</option>
-                        <option value="No">No Lights</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-xs">
-                    <label class="font-label-bold text-label-bold text-on-surface-variant">HOURS OF OPERATION</label>
-                    <input id="court-hours" class="bg-surface-container-low text-on-surface font-body-md px-md py-md rounded-lg border-b-2 border-secondary focus:border-primary outline-none transition-colors w-full" placeholder="e.g. 6AM - 10PM or 24/7">
-                </div>
-            </div>
-
-            <div class="mt-md">
-                <button type="submit" id="submit-btn" class="w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-md rounded-lg shadow-[0_4px_0_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-all flex justify-center items-center gap-sm">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">publish</span> Submit Court
-                </button>
-            </div>
-        </form>
+<main class="flex-grow w-full pt-16 bg-background pb-20">
+    <div id="court-content" class="flex flex-col w-full pb-safe">
+        <div class="text-center p-xl mt-xl flex flex-col items-center">
+            <span class="material-symbols-outlined animate-spin text-primary text-4xl mb-4">sync</span>
+            <p class="font-body-md text-on-surface-variant">Fetching court specs from HoopFinder Database...</p>
+        </div>
     </div>
 </main>
 
 <script>
-let map;
-let currentCoords = [-75.1652, 39.9526];
-
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
     } else {
-        initMap();
+        const userPhoto = document.getElementById('header-user-photo');
+        if (userPhoto && user.photoURL) {
+            userPhoto.src = user.photoURL;
+        }
+        loadCourtDetails();
     }
 });
 
-function initMap() {
-    map = new maplibregl.Map({
-        container: 'add-map',
-        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-        center: currentCoords,
-        zoom: 15
-    });
-
-    map.on('move', () => {
-        const center = map.getCenter();
-        currentCoords = [center.lng, center.lat];
-        document.getElementById('coord-display').innerText = `${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}`;
-    });
-}
-
-function geolocate() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            map.flyTo({center: [pos.coords.longitude, pos.coords.latitude], zoom: 16});
-        });
-    }
-}
-
-function compressImage(file, maxWidth = 1200, quality = 0.75) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                let width = img.width;
-                let height = img.height;
-
-                if (width > maxWidth) {
-                    height = Math.round((height * maxWidth) / width);
-                    width = maxWidth;
-                }
-
-                const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-
-                canvas.toBlob(
-                    (blob) => blob ? resolve(blob) : reject(new Error('Canvas compression failed')),
-                    'image/jpeg',
-                    quality
-                );
-            };
-            img.onerror = (err) => reject(err);
-        };
-        reader.onerror = (err) => reject(err);
-    });
-}
-
-async function submitCourt(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submit-btn');
-    const imageInput = document.getElementById('court-image');
+async function loadCourtDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
     
-    if (!imageInput.files || imageInput.files.length === 0) {
-        alert("Please select a court photo before submitting.");
+    if (!id) {
+        document.getElementById('court-content').innerHTML = '<div class="p-xl text-center"><p class="text-error font-body-md">Error: No Court ID provided.</p></div>';
         return;
     }
 
-    btn.disabled = true;
-    btn.innerText = "Compressing & Uploading Photo...";
-
     try {
-        const rawFile = imageInput.files[0];
-        const compressedBlob = await compressImage(rawFile, 1200, 0.75);
+        const res = await fetchWithAuth(`${API_BASE_URL}/courts/${id}`);
+        if (!res.ok) throw new Error(`Court HTTP Error ${res.status}`);
+        const data = await res.json();
+        const court = data.court;
+        
+        if (!court) {
+            document.getElementById('court-content').innerHTML = '<div class="p-xl text-center"><p class="text-error font-body-md">Court not found in database.</p></div>';
+            return;
+        }
 
-        const fileName = `courts/${Date.now()}_${auth.currentUser.uid}.jpg`;
-        const storageRef = firebase.storage().ref().child(fileName);
-        const snapshot = await storageRef.put(compressedBlob, { contentType: 'image/jpeg' });
-        const imageUrl = await snapshot.ref.getDownloadURL();
+        const name = court.courtName || court.name || 'Proprietary Court';
+        const rating = court.rating ? parseFloat(court.rating).toFixed(1) : '4.5';
+        const courtCount = court.courtCount || court.hoops || '1 Court';
+        const rimType = court.rimType || 'Single Rim';
+        const condition = court.condition || 'Good';
+        const access = court.access || 'Free Public Access';
+        const surface = court.surfaceType || court.surface || 'Asphalt';
+        const lit = court.lit || 'Yes';
+        const hours = court.hours || '6:00 AM - 10:00 PM';
+        const imageUrl = court.imageUrl;
+        const clat = court.coordinates ? court.coordinates[1] : (court.lat || 39.9526);
+        const clon = court.coordinates ? court.coordinates[0] : (court.lng || -75.1652);
+        
+        const imageHeaderHtml = imageUrl 
+            ? `<div class="w-full h-[35vh] min-h-[250px] relative border-b border-surface-container-highest overflow-hidden">
+                <img src="${imageUrl}" class="w-full h-full object-cover">
+               </div>`
+            : '';
 
-        btn.innerText = "Submitting Court Specs...";
+        const html = `
+        ${imageHeaderHtml}
+        
+        <div class="px-margin-mobile flex flex-col gap-lg py-md mt-4">
+            <div>
+                <div class="flex justify-between items-start gap-2">
+                    <h1 class="font-display-lg text-headline-lg text-on-background leading-tight uppercase flex-1">${name}</h1>
+                    <div class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-lg font-label-bold text-headline-md flex items-center gap-1">
+                        <span>${rating}</span><span class="text-xs text-primary/70">/ 5.0</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-xs mt-2">
+                    <span class="font-label-bold text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded border border-outline-variant/30 uppercase">ID: ${court.id}</span>
+                    <span class="font-label-bold text-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20 uppercase">${access}</span>
+                </div>
+            </div>
 
-        const res = await fetchWithAuth(`${API_BASE_URL}/courts`, {
-            method: 'POST',
-            body: {
-                courtName: document.getElementById('court-name').value.trim(),
-                rating: document.getElementById('court-rating').value,
-                courtCount: document.getElementById('court-count').value,
-                rimType: document.getElementById('rim-type').value,
-                condition: document.getElementById('court-condition').value,
-                access: document.getElementById('court-access').value,
-                surfaceType: document.getElementById('surface-type').value,
-                lit: document.getElementById('lighting-status').value,
-                hours: document.getElementById('court-hours').value.trim() || 'Open Access / Unspecified',
-                coordinates: currentCoords,
-                imageUrl: imageUrl
-            }
+            <div class="flex gap-sm">
+                <button onclick="alert('Check-in reported!')" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In
+                </button>
+            </div>
+
+            <div class="flex flex-col gap-sm">
+                <h2 class="font-headline-md text-headline-md text-on-background uppercase mb-xs flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">analytics</span> Court Stats & Specs
+                </h2>
+                <div class="grid grid-cols-2 gap-sm">
+                    <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
+                        <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Courts</span>
+                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${courtCount}</div>
+                    </div>
+                    <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
+                        <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Rim Type</span>
+                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${rimType}</div>
+                    </div>
+                    <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
+                        <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Condition</span>
+                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${condition}</div>
+                    </div>
+                    <div class="bg-surface-container rounded-lg p-md flex flex-col justify-between border border-surface-container-highest">
+                        <span class="font-label-bold text-label-sm text-secondary uppercase mb-2">Surface</span>
+                        <div class="font-headline-lg-mobile text-[20px] text-on-surface line-clamp-1">${surface}</div>
+                    </div>
+                    
+                    <div class="col-span-2 bg-surface-container rounded-lg p-md flex items-center justify-between border border-surface-container-highest">
+                        <div class="flex items-center gap-md">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-headline-md">schedule</span>
+                            </div>
+                            <div>
+                                <div class="font-label-bold text-label-bold text-secondary uppercase mb-xs">Hours of Operation</div>
+                                <div class="font-headline-md text-[18px] text-on-surface leading-snug">${hours}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 bg-surface-container rounded-lg p-md flex items-center justify-between border border-surface-container-highest">
+                        <div class="flex items-center gap-md">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-headline-md">lightbulb</span>
+                            </div>
+                            <div>
+                                <div class="font-label-bold text-label-bold text-secondary uppercase mb-xs">Night Lighting</div>
+                                <div class="font-headline-md text-[20px] text-on-surface leading-none">${String(lit).toUpperCase()}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-sm mt-2">
+                <h2 class="font-headline-md text-headline-md text-on-background uppercase mb-xs flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span> Location
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-sm mb-2">
+                    <a href="https://maps.apple.com/?q=${clat},${clon}" target="_blank" class="bg-surface-container rounded-lg p-sm flex items-center justify-center gap-xs font-label-bold text-label-bold text-on-surface border border-outline-variant/30 hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">explore</span> Apple Maps
+                    </a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${clat},${clon}" target="_blank" class="bg-surface-container rounded-lg p-sm flex items-center justify-center gap-xs font-label-bold text-label-bold text-on-surface border border-outline-variant/30 hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">map</span> Google Maps
+                    </a>
+                </div>
+
+                <div id="detail-map" class="w-full h-[300px] relative rounded-xl border border-surface-container-highest overflow-hidden"></div>
+            </div>
+        </div>`;
+        document.getElementById('court-content').innerHTML = html;
+        
+        const detailMap = new maplibregl.Map({
+            container: 'detail-map',
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            center: [clon, clat],
+            zoom: 15,
+            interactive: true
         });
 
-        if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-        alert("Court published successfully to HoopFinder!");
-        window.location.href = "index.html";
-    } catch(err) {
-        alert("Error adding court: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "Submit Court";
+        detailMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+        new maplibregl.Marker({ color: '#ff5722' })
+            .setLngLat([clon, clat])
+            .addTo(detailMap);
+
+    } catch (e) {
+        console.error('Error fetching court details:', e);
+        document.getElementById('court-content').innerHTML = `<div class="p-xl text-center"><p class="text-error font-body-md">Failed to load court details from database (${e.message}).</p></div>`;
     }
 }
 </script>
