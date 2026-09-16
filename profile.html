@@ -121,11 +121,30 @@ function getCookie(name) {
             <span class="material-symbols-outlined text-error">logout</span>
         </button>
     </div>
+    <div class="w-full flex flex-col gap-xs mt-md">
+        <button onclick="toggleSavedCourtsList()" class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-xl border border-outline-variant/20 flex justify-between items-center">
+            <span class="font-label-bold text-label-bold text-on-surface">My Saved Courts</span>
+            <span id="saved-chevron" class="material-symbols-outlined text-tertiary transition-transform">chevron_right</span>
+        </button>
+
+        <!-- Expandable Saved Courts Container -->
+        <div id="saved-courts-container" class="hidden flex-col gap-sm mt-2"></div>
+
+        <button class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-xl border border-outline-variant/20 flex justify-between items-center">
+            <span class="font-label-bold text-label-bold text-on-surface">Account Settings</span>
+            <span class="material-symbols-outlined text-tertiary">chevron_right</span>
+        </button>
+        <button id="logout-btn" class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-xl border border-outline-variant/20 flex justify-between items-center mt-lg">
+            <span class="font-label-bold text-label-bold text-error">Log Out</span>
+            <span class="material-symbols-outlined text-error">logout</span>
+        </button>
+    </div>
 
 </div>
 </main>
 
 <script>
+    
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
@@ -157,6 +176,58 @@ function onAuthReady(user) {
             window.location.href = "./index.html";
         });
     });
+}
+
+let savedCourtsLoaded = false;
+
+async function toggleSavedCourtsList() {
+    const container = document.getElementById('saved-courts-container');
+    const chevron = document.getElementById('saved-chevron');
+    
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        container.classList.add('flex');
+        chevron.classList.add('rotate-90');
+        if (!savedCourtsLoaded) loadSavedCourts();
+    } else {
+        container.classList.add('hidden');
+        container.classList.remove('flex');
+        chevron.classList.remove('rotate-90');
+    }
+}
+
+async function loadSavedCourts() {
+    const container = document.getElementById('saved-courts-container');
+    container.innerHTML = `<div class="p-4 text-center font-label-bold text-xs text-on-surface-variant"><span class="material-symbols-outlined animate-spin text-primary">sync</span> Loading saved courts...</div>`;
+
+    try {
+        const res = await fetchWithAuth(`${API_BASE_URL}/saved-courts`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        
+        container.innerHTML = '';
+        const courts = data.courts || [];
+
+        if (courts.length === 0) {
+            container.innerHTML = `<p class="text-xs text-on-surface-variant text-center p-3">No saved courts yet. Save courts from the details page!</p>`;
+            return;
+        }
+
+        courts.forEach(c => {
+            const html = `
+            <a href="court-details.html?id=${c.id}" class="bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/30 p-3 rounded-xl flex justify-between items-center transition-all">
+                <div class="flex flex-col">
+                    <span class="font-headline-md text-sm text-primary uppercase">${c.courtName || 'Court'}</span>
+                    <span class="font-body-md text-xs text-on-surface-variant">${c.surfaceType || 'Asphalt'} • ${c.rimType || 'Single Rim'}</span>
+                </div>
+                <span class="material-symbols-outlined text-tertiary text-sm">arrow_forward</span>
+            </a>`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+        savedCourtsLoaded = true;
+    } catch (e) {
+        container.innerHTML = `<p class="text-xs text-error text-center p-3">Failed to load saved courts.</p>`;
+    }
 }
 </script>
 
