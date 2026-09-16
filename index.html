@@ -56,6 +56,12 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "backgroun
   0% { transform: scale(0.6); opacity: 1; }
   100% { transform: scale(2.2); opacity: 0; }
 }
+
+input {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+}
 </style>
 <script>
 const firebaseConfig = {
@@ -192,23 +198,39 @@ function deg2rad(deg) { return deg * (Math.PI / 180); }
         </div>
     </div>
 
-    <!-- Login Auth Overlay -->
-    <div id="login-overlay" class="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-6 text-center">
-        <div class="w-full max-w-sm flex flex-col items-center gap-6 bg-surface-container p-8 rounded-2xl border border-outline-variant/30">
-            <img src="logosvg.svg" alt="HoopFinder" class="h-16 w-auto object-contain mb-2">
+    <!-- Auth Overlay -->
+    <div id="login-overlay" class="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
+        <div class="w-full max-w-sm flex flex-col items-center gap-5 bg-surface-container p-6 rounded-2xl border border-outline-variant/40 shadow-2xl my-auto">
+            <img src="logosvg.svg" alt="HoopFinder" class="h-14 w-auto object-contain">
             <div>
-                <h1 class="font-display-lg text-headline-lg text-primary uppercase tracking-wider">HOOPFINDER</h1>
-                <p class="font-body-md text-on-surface-variant text-sm mt-1">Authenticate to access court discovery and player networks.</p>
+                <h1 id="auth-title" class="font-display-lg text-headline-lg text-primary uppercase tracking-wider">WELCOME BACK</h1>
+                <p id="auth-subtitle" class="font-body-md text-on-surface-variant text-xs mt-1">Sign in to discover courts and view active runs.</p>
             </div>
             
-            <div class="w-full flex flex-col text-left gap-2 mt-2">
-                <label class="font-label-bold text-xs text-secondary uppercase tracking-wider">Baller Username</label>
-                <input id="username" type="text" placeholder="Enter username..." class="w-full bg-surface-container-low text-on-surface font-body-md px-4 py-3 rounded-xl border border-outline-variant focus:border-primary outline-none transition-colors">
+            <!-- Optional Username Box (Only shown in Sign Up mode) -->
+            <div id="signup-username-container" class="w-full flex flex-col text-left gap-1 hidden">
+                <label class="font-label-bold text-[10px] text-secondary uppercase tracking-wider">Choose Baller Username</label>
+                <input id="signup-username" type="text" placeholder="e.g. PhillyHooper" class="w-full bg-surface-container-low text-on-surface font-body-md px-3 py-2.5 rounded-xl border border-outline-variant/40 focus:border-primary outline-none transition-colors text-xs">
             </div>
 
-            <button class="login-trigger w-full bg-primary text-on-primary font-headline-md text-headline-md uppercase py-3 rounded-xl hover:bg-primary/90 transition-colors flex justify-center items-center gap-2 mt-2">
-                <span class="material-symbols-outlined">login</span> Sign In With Google
-            </button>
+            <!-- Single Sign-On Buttons with Fixed SVG ViewBoxes -->
+            <div class="w-full flex flex-col gap-2.5 mt-1">
+                <button onclick="authenticateWith('google')" class="w-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-bold text-xs uppercase py-3.5 rounded-xl border border-outline-variant/40 transition-all flex justify-center items-center gap-3">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+                    <span id="google-btn-text">Continue with Google</span>
+                </button>
+                <button onclick="authenticateWith('apple')" class="w-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-bold text-xs uppercase py-3.5 rounded-xl border border-outline-variant/40 transition-all flex justify-center items-center gap-3">
+                    <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 170 170" preserveAspectRatio="xMidYMid meet"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.82.13-9.72-1.93-14.72-6.18-3.21-2.73-7.05-7.39-11.52-13.98-6.12-8.99-11.09-18.89-14.91-29.7-3.82-10.81-5.73-21.2-5.73-31.18 0-14.88 3.82-27.14 11.47-36.8 7.65-9.65 17.27-14.59 28.87-14.83 4.82 0 10.05 1.12 15.68 3.37 5.63 2.25 9.61 3.38 11.95 3.38 2.12 0 6.24-1.19 12.35-3.58 6.12-2.38 11.41-3.48 15.89-3.28 12.63.63 22.82 5.06 30.56 13.29-11.13 6.75-16.6 16.25-16.42 28.5.19 9.62 3.88 17.68 11.08 24.18 7.2 6.5 15.8 10.06 25.8 10.68-2.63 7.82-6.19 15.51-10.68 23.08zM119.22 31.84c0-7.38 2.68-14.49 8.04-21.34 5.36-6.85 12.1-10.5 20.22-10.5.25 1.13.38 2.13.38 3 .01 7.25-2.65 14.33-7.98 21.24-5.33 6.91-12.08 10.55-20.25 10.92-.13-1.01-.41-2.12-.41-3.32z"/></svg>
+                    <span id="apple-btn-text">Continue with Apple</span>
+                </button>
+            </div>
+
+            <!-- Toggle Between Sign In and Sign Up -->
+            <div class="mt-2 border-t border-outline-variant/30 pt-4 w-full">
+                <button type="button" onclick="toggleAuthMode()" id="auth-toggle-btn" class="font-label-bold text-xs text-primary uppercase hover:underline">
+                    Need an account? Sign Up
+                </button>
+            </div>
         </div>
     </div>
 </main>
@@ -217,6 +239,7 @@ function deg2rad(deg) { return deg * (Math.PI / 180); }
 let allCourtFeatures = [];
 let mapMarkers = [];
 let userLocationMarker = null;
+let isSignUpMode = false; 
 
 // Touch & Drag Gesture Logic for Mobile Sheet
 const bottomSheet = document.getElementById('bottom-sheet');
@@ -253,35 +276,71 @@ sheetHeader.addEventListener('touchend', (e) => {
     else toggleSheet(); 
 });
 
-function loginWithGoogle() {
-    const usernameInput = document.getElementById('username');
-    const username = usernameInput ? usernameInput.value.trim() : '';
+function toggleAuthMode() {
+    isSignUpMode = !isSignUpMode;
+    const usernameContainer = document.getElementById('signup-username-container');
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
+    const toggleBtn = document.getElementById('auth-toggle-btn');
+    const googleText = document.getElementById('google-btn-text');
+    const appleText = document.getElementById('apple-btn-text');
 
-    if (!username) {
-        alert("Please choose a Baller Username before authenticating with Google.");
-        if (usernameInput) usernameInput.focus();
-        return;
+    if (isSignUpMode) {
+        title.innerText = "CREATE ACCOUNT";
+        subtitle.innerText = "Set your username and sign up with Google or Apple.";
+        usernameContainer.classList.remove('hidden');
+        toggleBtn.innerText = "Already have an account? Sign In";
+        googleText.innerText = "Sign Up with Google";
+        appleText.innerText = "Sign Up with Apple";
+    } else {
+        title.innerText = "WELCOME BACK";
+        subtitle.innerText = "Sign in to discover courts and view active runs.";
+        usernameContainer.classList.add('hidden');
+        toggleBtn.innerText = "Need an account? Sign Up";
+        googleText.innerText = "Continue with Google";
+        appleText.innerText = "Continue with Apple";
+    }
+}
+
+function setPlayerCookies(username) {
+    const cleanHandle = username || 'Baller';
+    document.cookie = `hoopfinder_player_id=${encodeURIComponent(cleanHandle)}; max-age=86400; path=/`;
+    document.cookie = `hoopfinder_username=${encodeURIComponent(cleanHandle)}; max-age=86400; path=/`;
+}
+
+function authenticateWith(providerName) {
+    let chosenUsername = '';
+    
+    if (isSignUpMode) {
+        chosenUsername = document.getElementById('signup-username').value.trim();
+        if (!chosenUsername) {
+            alert("Please choose a Baller Username before creating your account.");
+            document.getElementById('signup-username').focus();
+            return;
+        }
     }
 
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = providerName === 'apple' 
+        ? new firebase.auth.OAuthProvider('apple.com') 
+        : new firebase.auth.GoogleAuthProvider();
+
     auth.signInWithPopup(provider)
-        .then((result) => {
-            document.cookie = `hoopfinder_player_id=${encodeURIComponent(username)}; max-age=86400; path=/`;
-            document.cookie = `hoopfinder_username=${encodeURIComponent(username)}; max-age=86400; path=/`;
+        .then(async (result) => {
+            const finalUsername = chosenUsername || result.user.displayName || 'Baller';
+            
+            if (chosenUsername) {
+                await result.user.updateProfile({ displayName: chosenUsername });
+            }
+            
+            setPlayerCookies(finalUsername);
             document.getElementById('login-overlay').classList.add('hidden');
             if(result.user && result.user.photoURL) {
                 document.getElementById('header-user-photo').src = result.user.photoURL;
             }
             fetchCourts();
         })
-        .catch((error) => {
-            alert("Authentication failed: " + error.message);
-        });
+        .catch((error) => alert(`${providerName.toUpperCase()} Authentication failed: ${error.message}`));
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.login-trigger').forEach(btn => btn.addEventListener('click', loginWithGoogle));
-});
 
 auth.onAuthStateChanged((user) => {
     const overlay = document.getElementById('login-overlay');
@@ -343,7 +402,6 @@ map.on('load', () => {
             () => fetchCourts()
         );
 
-        // Continuous location tracking
         navigator.geolocation.watchPosition(
             (pos) => renderUserLocationMarker(pos.coords.longitude, pos.coords.latitude),
             null,
