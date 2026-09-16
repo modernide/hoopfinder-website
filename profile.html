@@ -81,9 +81,10 @@ function getCookie(name) {
         <p id="user-profile-email" class="font-body-md text-xs text-on-surface-variant mt-1">user@email.com</p>
     </div>
 
+    <!-- Live User Stats Bar -->
     <div class="grid grid-cols-3 gap-sm w-full mt-md">
         <div class="bg-surface-container rounded-lg p-sm flex flex-col items-center justify-center border border-surface-container-highest">
-            <span class="font-headline-md text-headline-md text-primary">0</span>
+            <span id="user-checkins-count" class="font-headline-md text-headline-md text-primary">0</span>
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Check-ins</span>
         </div>
         <div class="bg-surface-container rounded-lg p-sm flex flex-col items-center justify-center border border-surface-container-highest">
@@ -91,14 +92,12 @@ function getCookie(name) {
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Saved</span>
         </div>
         <div class="bg-surface-container rounded-lg p-sm flex flex-col items-center justify-center border border-surface-container-highest">
-            <span class="font-headline-md text-headline-md text-primary">100</span>
+            <span id="user-rep-count" class="font-headline-md text-headline-md text-primary">100</span>
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Rep</span>
         </div>
     </div>
 
     <div class="w-full flex flex-col gap-md mt-md">
-        
-        <!-- Saved Courts Unified Card Section -->
         <div class="w-full bg-surface-container rounded-2xl border border-outline-variant/30 overflow-hidden shadow-md">
             <button onclick="toggleSavedCourtsList()" class="w-full p-md flex justify-between items-center transition-colors hover:bg-surface-container-high group">
                 <div class="flex items-center gap-sm">
@@ -107,8 +106,6 @@ function getCookie(name) {
                 </div>
                 <span id="saved-chevron" class="material-symbols-outlined text-tertiary transition-transform duration-200 group-hover:text-on-surface">expand_more</span>
             </button>
-
-            <!-- Expanded List View -->
             <div id="saved-courts-container" class="hidden flex-col border-t border-outline-variant/20 bg-surface-container-low/40"></div>
         </div>
 
@@ -161,13 +158,22 @@ function onAuthReady(user) {
         });
     });
 
-    fetchWithAuth(`${API_BASE_URL}/saved-courts`)
-        .then(res => res.json())
-        .then(data => {
-            const countElem = document.getElementById('saved-courts-count');
-            if (countElem && data.courts) countElem.innerText = data.courts.length;
-        })
-        .catch(() => {});
+    // Fetch user stats (check-ins, saved courts, rep)
+    loadUserStats();
+}
+
+async function loadUserStats() {
+    try {
+        const res = await fetchWithAuth(`${API_BASE_URL}/user-stats`);
+        if (res.ok) {
+            const data = await res.json();
+            document.getElementById('user-checkins-count').innerText = data.checkIns || 0;
+            document.getElementById('saved-courts-count').innerText = data.savedCourts || 0;
+            document.getElementById('user-rep-count').innerText = data.rep || 100;
+        }
+    } catch (e) {
+        console.error("Failed to load user stats:", e);
+    }
 }
 
 let savedCourtsLoaded = false;
