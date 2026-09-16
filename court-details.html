@@ -46,6 +46,58 @@ async function fetchWithAuth(url, options = {}) {
     options.headers = headers;
     return fetch(url, options);
 }
+
+let isSaved = false;
+
+async function checkSavedStatus(courtId) {
+    try {
+        const res = await fetchWithAuth(`${API_BASE_URL}/saved-courts`);
+        if (res.ok) {
+            const data = await res.json();
+            isSaved = data.courts.some(c => c.id === courtId);
+            updateSaveButtonUI();
+        }
+    } catch (e) {
+        console.error("Error checking saved status:", e);
+    }
+}
+
+function updateSaveButtonUI() {
+    const icon = document.getElementById('save-icon');
+    const text = document.getElementById('save-text');
+    const btn = document.getElementById('save-court-btn');
+    if (isSaved) {
+        icon.innerText = 'bookmark';
+        icon.style.fontVariationSettings = "'FILL' 1";
+        text.innerText = 'Saved';
+        btn.classList.add('text-primary', 'border-primary/50');
+    } else {
+        icon.innerText = 'bookmark_border';
+        icon.style.fontVariationSettings = "'FILL' 0";
+        text.innerText = 'Save';
+        btn.classList.remove('text-primary', 'border-primary/50');
+    }
+}
+
+async function toggleSaveCourt() {
+    if (!currentCourtData) return;
+    const courtId = currentCourtData.id;
+    const method = isSaved ? 'DELETE' : 'POST';
+    const url = isSaved ? `${API_BASE_URL}/saved-courts/${courtId}` : `${API_BASE_URL}/saved-courts`;
+
+    try {
+        const res = await fetchWithAuth(url, {
+            method: method,
+            body: isSaved ? null : { courtId }
+        });
+        if (res.ok) {
+            isSaved = !isSaved;
+            updateSaveButtonUI();
+        }
+    } catch (e) {
+        alert("Failed to update saved courts: " + e.message);
+    }
+}
 </script>
 </head>
 <body class="min-h-screen flex flex-col">
