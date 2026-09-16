@@ -6,7 +6,6 @@
 <title>HoopFinder - Profile</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
 
@@ -20,7 +19,6 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-second
 <style>
 @layer base { body { @apply bg-background text-on-background antialiased; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }
 ::-webkit-scrollbar { display: none; }
-#map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
 </style>
 <script>
 const firebaseConfig = {
@@ -50,15 +48,6 @@ async function fetchWithAuth(url, options = {}) {
     return fetch(url, options);
 }
 
-function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
-    var R = 3958.8;
-    var dLat = deg2rad(lat2 - lat1);
-    var dLon = deg2rad(lon2 - lon1);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-function deg2rad(deg) { return deg * (Math.PI / 180); }
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -98,8 +87,8 @@ function getCookie(name) {
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Check-ins</span>
         </div>
         <div class="bg-surface-container rounded-lg p-sm flex flex-col items-center justify-center border border-surface-container-highest">
-            <span class="font-headline-md text-headline-md text-primary">0</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Courts</span>
+            <span id="saved-courts-count" class="font-headline-md text-headline-md text-primary">0</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Saved</span>
         </div>
         <div class="bg-surface-container rounded-lg p-sm flex flex-col items-center justify-center border border-surface-container-highest">
             <span class="font-headline-md text-headline-md text-primary">100</span>
@@ -108,26 +97,11 @@ function getCookie(name) {
     </div>
 
     <div class="w-full flex flex-col gap-xs mt-md">
-        <button class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-lg border border-outline-variant/20 flex justify-between items-center">
-            <span class="font-label-bold text-label-bold text-on-surface">My Saved Courts</span>
-            <span class="material-symbols-outlined text-tertiary">chevron_right</span>
-        </button>
-        <button class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-lg border border-outline-variant/20 flex justify-between items-center">
-            <span class="font-label-bold text-label-bold text-on-surface">Account Settings</span>
-            <span class="material-symbols-outlined text-tertiary">chevron_right</span>
-        </button>
-        <button id="logout-btn" class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-lg border border-outline-variant/20 flex justify-between items-center mt-lg">
-            <span class="font-label-bold text-label-bold text-error">Log Out</span>
-            <span class="material-symbols-outlined text-error">logout</span>
-        </button>
-    </div>
-    <div class="w-full flex flex-col gap-xs mt-md">
         <button onclick="toggleSavedCourtsList()" class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-xl border border-outline-variant/20 flex justify-between items-center">
             <span class="font-label-bold text-label-bold text-on-surface">My Saved Courts</span>
             <span id="saved-chevron" class="material-symbols-outlined text-tertiary transition-transform">chevron_right</span>
         </button>
 
-        <!-- Expandable Saved Courts Container -->
         <div id="saved-courts-container" class="hidden flex-col gap-sm mt-2"></div>
 
         <button class="w-full bg-surface-container hover:bg-surface-container-high transition-colors text-left p-md rounded-xl border border-outline-variant/20 flex justify-between items-center">
@@ -144,19 +118,15 @@ function getCookie(name) {
 </main>
 
 <script>
-    
 auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "./index.html"; 
     } else {
-        console.log("Welcome, " + user.displayName);
         const userPhoto = document.getElementById('header-user-photo');
         if (userPhoto && user.photoURL) {
             userPhoto.src = user.photoURL;
         }
-        if (typeof onAuthReady === 'function') {
-            onAuthReady(user);
-        }
+        onAuthReady(user);
     }
 });
 
@@ -176,6 +146,15 @@ function onAuthReady(user) {
             window.location.href = "./index.html";
         });
     });
+
+    // Quick fetch to set initial saved count stat card
+    fetchWithAuth(`${API_BASE_URL}/saved-courts`)
+        .then(res => res.json())
+        .then(data => {
+            const countElem = document.getElementById('saved-courts-count');
+            if (countElem && data.courts) countElem.innerText = data.courts.length;
+        })
+        .catch(() => {});
 }
 
 let savedCourtsLoaded = false;
@@ -207,6 +186,9 @@ async function loadSavedCourts() {
         
         container.innerHTML = '';
         const courts = data.courts || [];
+
+        const countElem = document.getElementById('saved-courts-count');
+        if (countElem) countElem.innerText = courts.length;
 
         if (courts.length === 0) {
             container.innerHTML = `<p class="text-xs text-on-surface-variant text-center p-3">No saved courts yet. Save courts from the details page!</p>`;

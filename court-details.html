@@ -54,7 +54,7 @@ async function checkSavedStatus(courtId) {
         const res = await fetchWithAuth(`${API_BASE_URL}/saved-courts`);
         if (res.ok) {
             const data = await res.json();
-            isSaved = data.courts.some(c => c.id === courtId);
+            isSaved = (data.courts || []).some(c => c.id === courtId);
             updateSaveButtonUI();
         }
     } catch (e) {
@@ -66,6 +66,8 @@ function updateSaveButtonUI() {
     const icon = document.getElementById('save-icon');
     const text = document.getElementById('save-text');
     const btn = document.getElementById('save-court-btn');
+    if (!icon || !text || !btn) return;
+    
     if (isSaved) {
         icon.innerText = 'bookmark';
         icon.style.fontVariationSettings = "'FILL' 1";
@@ -95,7 +97,7 @@ async function toggleSaveCourt() {
             updateSaveButtonUI();
         }
     } catch (e) {
-        alert("Failed to update saved courts: " + e.message);
+        alert("Failed to update saved court: " + e.message);
     }
 }
 </script>
@@ -125,10 +127,9 @@ async function toggleSaveCourt() {
     </div>
 </main>
 
-<!-- Transit-Style Check-In & Verification Modal -->
+<!-- Check-In Modal -->
 <div id="checkin-modal" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="w-full max-w-lg bg-surface-container border border-surface-container-highest rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto">
-        
         <div class="flex justify-between items-center border-b border-surface-container-highest pb-3">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary text-2xl">verified</span>
@@ -140,7 +141,6 @@ async function toggleSaveCourt() {
         <p class="font-body-md text-xs text-on-surface-variant">Help keep HoopFinder accurate by confirming conditions live at the park.</p>
 
         <form id="checkin-form" onsubmit="submitCheckIn(event)" class="flex flex-col gap-md">
-            
             <div class="flex flex-col gap-xs">
                 <label class="font-label-bold text-xs text-secondary uppercase">Rate Park Overall</label>
                 <div class="flex items-center gap-2">
@@ -266,12 +266,6 @@ async function loadCourtDetails() {
             </div>
 
             <div class="flex gap-sm">
-                <button onclick="openCheckInModal()" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors shadow-md">
-                    <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In & Verify Specs
-                </button>
-            </div>
-
-            <div class="flex gap-sm">
                 <button onclick="openCheckInModal()" class="flex-1 bg-primary text-on-primary font-label-bold text-label-bold uppercase py-md px-md rounded-xl flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors shadow-md">
                     <span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span> Check In
                 </button>
@@ -279,6 +273,7 @@ async function loadCourtDetails() {
                     <span id="save-icon" class="material-symbols-outlined">bookmark_border</span> <span id="save-text">Save</span>
                 </button>
             </div>  
+
             <div class="flex flex-col gap-sm">
                 <h2 class="font-headline-md text-headline-md text-on-background uppercase mb-xs flex items-center gap-xs">
                     <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">analytics</span> Court Stats & Specs
@@ -360,6 +355,8 @@ async function loadCourtDetails() {
             .setLngLat([clon, clat])
             .addTo(detailMap);
 
+        checkSavedStatus(currentCourtData.id);
+
     } catch (e) {
         console.error('Error fetching court details:', e);
         document.getElementById('court-content').innerHTML = `<div class="p-xl text-center"><p class="text-error font-body-md">Failed to load court details from database (${e.message}).</p></div>`;
@@ -390,7 +387,6 @@ async function submitCheckIn(e) {
     const newRim = document.getElementById('checkin-rim').value;
     const headcount = document.getElementById('checkin-headcount').value;
 
-    // Calculate rolling average
     const currentRating = parseFloat(currentCourtData.rating || 4.5);
     const currentCount = parseInt(currentCourtData.ratingCount || 1, 10);
     
@@ -398,7 +394,6 @@ async function submitCheckIn(e) {
     const updatedRating = (((currentRating * currentCount) + userRating) / updatedCount).toFixed(1);
 
     try {
-        // 1. Post live activity feed entry
         await fetchWithAuth(`${API_BASE_URL}/activity`, {
             method: 'POST',
             body: {
@@ -407,7 +402,6 @@ async function submitCheckIn(e) {
             }
         });
 
-        // 2. Send updated average and total count to API
         await fetchWithAuth(`${API_BASE_URL}/courts/${currentCourtData.id}`, {
             method: 'PATCH',
             body: {
@@ -419,7 +413,6 @@ async function submitCheckIn(e) {
             }
         });
 
-        // 3. Update local cache & DOM UI so it doesn't revert on re-renders
         currentCourtData.rating = updatedRating;
         currentCourtData.ratingCount = updatedCount;
         currentCourtData.condition = newCondition;
